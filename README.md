@@ -1,2 +1,2 @@
 # saliancy-metrics
-A Unified Framework for Benchmarking Explanation methods in Computer Vision
+A Unified Framework for Benchmarking Explanation Methods in Computer Vision.
