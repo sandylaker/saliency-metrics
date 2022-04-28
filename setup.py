@@ -29,7 +29,7 @@ setup(
     description="A Unified Framework for Benchmarking Explanation methods in Computer Vision",
     keywords=["Deep Learning", "Computer Vision", "Explainable AI"],
     packages=find_packages(exclude=("tests",)),
-    url="https://github.com/slds-lmu/saliancy-metrics",
+    url="https://github.com/sandylaker/saliancy-metrics",
     author="TODO",
     author_email="TODO",
     install_requires=get_requirements("install"),
