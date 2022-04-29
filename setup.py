@@ -1,17 +1,5 @@
 import os.path as osp
-import pkg_resources
 from setuptools import find_packages, setup
-from typing import List
-
-
-def get_requirements(mode: str) -> List[str]:
-    if mode not in ("install", "dev"):
-        raise ValueError(f"name should be one of ('install', 'dev'), but got {mode}")
-
-    with open(osp.join("requirements", f"{mode}.txt"), "r") as f:
-        requirements: List[str] = [str(r) for r in pkg_resources.parse_requirements(f)]
-
-    return requirements
 
 
 def get_version() -> str:
@@ -24,14 +12,6 @@ def get_version() -> str:
 
 
 setup(
-    name="saliency-metrics",
     version=get_version(),
-    description="A Unified Framework for Benchmarking Explanation methods in Computer Vision",
-    keywords=["Deep Learning", "Computer Vision", "Explainable AI"],
     packages=find_packages(exclude=("tests",)),
-    url="https://github.com/sandylaker/saliancy-metrics",
-    author="TODO",
-    author_email="TODO",
-    install_requires=get_requirements("install"),
-    zip_safe=False,
 )

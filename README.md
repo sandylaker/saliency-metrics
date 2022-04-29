@@ -11,8 +11,9 @@ A Unified Framework for Benchmarking Explanation Methods in Computer Vision.
 automatically triggered when running `git commit`. One can also manually trigger the hooks with
 `pre-commit run --all-files`.
 3. Install `torch`.
-4. Install the package in editable mode `pip install -e .` .
-5. (Optional) Add custom directories in `.git/info/exclude` to make them ignored by git. Note that
+4. Install the requirements for development: `pip install -r requirements.txt`.
+5. Install the package in editable mode `pip install -e .` .
+6. (Optional) Add custom directories in `.git/info/exclude` to make them ignored by git. Note that
 some common directories like `.idea`, `.vscode` are already in the `.gitignore` file.
 
 ### Code linter, formatter, and unit tests
