@@ -2,7 +2,7 @@
 A Unified Framework for Benchmarking Explanation Methods in Computer Vision.
 
 ---
-![build](https://github.com/sandylaker/saliency-metrics/actions/workflows/unit-tests.yaml/badge.svg)
+[![build](https://github.com/sandylaker/saliancy-metrics/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/sandylaker/saliancy-metrics/actions/workflows/unit-tests.yml)
 [![codecov](https://codecov.io/gh/sandylaker/saliancy-metrics/branch/main/graph/badge.svg?token=ipPQ5VZivM)](https://codecov.io/gh/sandylaker/saliancy-metrics)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 ---
