@@ -24,4 +24,4 @@ jobs:
           pre-commit run --all-files
 
       - name: Run mypy
-        run: mypy saliency_metrics
+        run: pip install mypy && mypy saliency_metrics
