@@ -1,0 +1,53 @@
+name: Run unit tests
+on:
+  push:
+    paths-ignore:
+      - "README.md"
+
+  pull_request:
+    paths-ignore:
+      - "README.md"
+
+
+jobs:
+  cpu-tests:
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      max-parallel: 10
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.7, 3.8, 3.9]
+        include:
+          # include a single build on macosx
+          - os: macos-latest
+            python-version: 3.8
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install setuptools and wheel
+        run: pip install pip wheel setuptools -Uqq
+
+      - name: Install dev dependencies and build
+        run: pip install -r requirements_dev.txt && pip install -e .
+
+      - name: Validate installation
+        run: python -c "import saliency-metrics"
+
+      - name: Run unit tests and generate coverage report
+        run: sh tests/run_tests.sh
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+          fail_ci_if_error: false
+          verbose: true
