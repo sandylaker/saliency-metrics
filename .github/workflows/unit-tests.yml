@@ -39,7 +39,7 @@ jobs:
         run: pip install -r requirements_dev.txt && pip install -e .
 
       - name: Validate installation
-        run: python -c "import saliency-metrics"
+        run: python -c "import saliency_metrics"
 
       - name: Run unit tests and generate coverage report
         run: sh tests/run_tests.sh
