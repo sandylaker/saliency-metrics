@@ -170,11 +170,8 @@ def test_get_module():
     # test with non-existing module name
     assert get_module(model, "backbone") is None
 
-    # test with module being an instance of nn.Module
-    assert isinstance(get_module(model, model.layers[0]), nn.Linear)
-
     # test with invalid module type
-    with pytest.raises(TypeError, match="module can only be a str or torch.nn.Module"):
+    with pytest.raises(TypeError, match="module can only be a str"):
         _ = get_module(model, module=0)  # type: ignore
 
 
