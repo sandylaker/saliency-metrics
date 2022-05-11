@@ -6,7 +6,7 @@ import torch.nn as nn
 from timm.models.efficientnet import EfficientNet
 from torchvision.models import ResNet
 
-from saliency_metrics.models.build_classifier import CUSTOM_CLASSIFIERS, _preprocess_cfg, build_classifier, get_module
+from saliency_metrics.models.build_classifier import CUSTOM_CLASSIFIERS, _preprocess_cfg, build_classifier
 
 
 def _set_torch_home(target_path):
@@ -121,58 +121,6 @@ def test_custom_classifier(tmp_path):
     classifier = build_classifier(cfg)
     out = classifier(torch.ones(2, 3))
     torch.testing.assert_allclose(out, torch.zeros(2, 2))
-
-
-def test_get_module():
-    class SimpleModel(nn.Module):
-        def __init__(self):
-            super(SimpleModel, self).__init__()
-            self.layers = nn.Sequential(
-                nn.Linear(2, 2, bias=False),
-                nn.ReLU(),
-                nn.Linear(2, 3, bias=False),
-                nn.ReLU(),
-                nn.Linear(3, 2, bias=False),
-            )
-
-            self.head = nn.Linear(2, 2, bias=False)
-
-            for i, layer in enumerate(self.layers):
-                if isinstance(layer, nn.Linear):
-                    layer.weight.data.fill_(i)
-            self.head.weight.data.fill_(5)
-
-            for p in self.parameters():
-                p.requires_grad = False
-
-        def forward(self, x):
-            return self.head(self.layers(x))
-
-    model = SimpleModel()
-    model.eval()
-
-    # test with valid module name
-    layer_4 = get_module(model, "layers.4")
-    # layer_4 is filled with 4.0
-    layer_4_out = layer_4(torch.ones((2, 3)))
-    torch.testing.assert_allclose(layer_4_out, torch.full((2, 2), 12.0))
-
-    head = get_module(model, "head")
-    # head is filled with 5.0
-    head_out = head(torch.ones((2, 2)))
-    torch.testing.assert_allclose(head_out, torch.full((2, 2), 10.0))
-
-    # test with empty module name
-    full_model = get_module(model, "")
-    assert isinstance(full_model.layers, nn.Sequential)
-    assert isinstance(full_model.head, nn.Linear)
-
-    # test with non-existing module name
-    assert get_module(model, "backbone") is None
-
-    # test with invalid module type
-    with pytest.raises(TypeError, match="module can only be a str"):
-        _ = get_module(model, module=0)  # type: ignore
 
 
 def test_invalid_type_or_scope():
