@@ -7,7 +7,7 @@ import torch.nn as nn
 from mmcv import Registry
 from torchvision import models
 
-__all__ = ["build_classifier", "TIMM_CLASSIFIERS", "TORCHVISION_CLASSIFIERS", "CUSTOM_CLASSIFIERS", "get_module"]
+__all__ = ["build_classifier", "TIMM_CLASSIFIERS", "TORCHVISION_CLASSIFIERS", "CUSTOM_CLASSIFIERS"]
 
 
 def _preprocess_cfg(cfg: Dict, default_args: Optional[Dict] = None) -> Dict:
@@ -129,48 +129,3 @@ def build_classifier(cfg: Dict, default_args: Optional[Dict] = None) -> nn.Modul
         return CUSTOM_CLASSIFIERS.build(cfg=cfg, default_args=default_args)
     else:
         raise ValueError(f"Invalid scope name, should be one of 'timm', 'torchvision', 'custom', but got {scope}.")
-
-
-def get_module(model: nn.Module, module: str) -> Optional[nn.Module]:
-    r"""Returns a specific layer in a model based.
-
-    This function is adapted from `<TorchRay https://github.com/facebookresearch/TorchRay>_`.
-    :attr:`module` is either the name of a module (as given by the
-    :func:`named_modules` function for :class:`torch.nn.Module` objects) or
-    a :class:`torch.nn.Module` object. If :attr:`module` is a
-    :class:`torch.nn.Module` object, then :attr:`module` is returned unchanged.
-    If :attr:`module` is a str, the function searches for a module with the
-    name :attr:`module` and returns a :class:`torch.nn.Module` if found;
-    otherwise, ``None`` is returned.
-
-    Examples:
-        .. code-block:: python
-
-            from saliency_metrics.models import build_classifier
-
-            cfg = dict(type="torchvision.resnet18", num_classes=2)
-            model = build_classifier(cfg)
-
-            # get the last block
-            _ = get_module(model, "layer4.1")
-            # get the last BN layer
-            _ = get_module(model, "layer4.1.bn2")
-
-    Args:
-        model: Model in which to search for layer.
-        module: Name of layer.
-
-    Returns:
-        Specific PyTorch layer (``None`` if the layer isn't found).
-    """
-    if not isinstance(module, str):
-        raise TypeError(f"module can only be a str, but got {module.__class__.__name__}")
-
-    if module == "":
-        return model
-
-    for name, curr_module in model.named_modules():
-        if name == module:
-            return curr_module
-
-    return None
