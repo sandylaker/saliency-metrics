@@ -70,7 +70,7 @@ def build_classifier(cfg: Dict, default_args: Optional[Dict] = None) -> nn.Modul
             from torchvision.models.resnet import ResNet
             from saliency_metrics.models import build_classifier
 
-            cfg_1 = dict(type="torchvision.resnet18, num_classes=2, pretrained=False)
+            cfg_1 = dict(type="torchvision.resnet18", num_classes=2, pretrained=False)
             model = build_classifier(cfg_1)
             assert isinstance(model, ResNet)
 
@@ -81,7 +81,7 @@ def build_classifier(cfg: Dict, default_args: Optional[Dict] = None) -> nn.Modul
             from timm.models.efficientnet import EfficientNet
             from saliency_metrics.models import build_classifier
 
-            cfg_2 = dict(type="timm.efficientnet_b0, num_classes=2)
+            cfg_2 = dict(type="timm.efficientnet_b0", num_classes=2)
             model = build_classifier(cfg_2)
             assert isinstance(model, EfficientNet)
 
