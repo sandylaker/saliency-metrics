@@ -1,16 +1,11 @@
 ## Short Description
 
----
-
 Fixes # .
 
 ## Long Description
-
----
+Please write a long description about this pull request.
 
 ## Checklist
-
----
 
 - [ ] Code linting are passed. (Please run `pre-commit run --all-files`).
 - [ ] Mypy checks are passed. (Please run `mypy saliency_metrics`).
