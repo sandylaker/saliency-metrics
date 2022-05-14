@@ -50,12 +50,16 @@ CUSTOM_CLASSIFIERS = Registry("custom_classifiers", scope="custom")
 def build_classifier(cfg: Dict, default_args: Optional[Dict] = None) -> nn.Module:
     """Build a classifier.
 
-    This function supports building a classifier from `timm`, `torchvision` or custom-defined models.
-    `cfg` must contain the field "type", which should have the format `<scope>.<model_name>`. `scope` can be one of
-    `timm`, `torchvision`, or `custom`. When building a custom-defined classifier, the model should be already
-    registered under `saliency_metrics.models.CUSTOM_CLASSIFIERS` registry. When building a classifier from
-    `torchvision` or `timm`, the `model_name` should be the name of corresponding builder function, e.g., `resnet18`
-    or `efficientnet_b0`.
+    This function supports building a classifier from timm_, torchvision_ or **custom-defined**
+    models. ``cfg`` must contain the field "type", which should have the format ``<scope>.<model_name>``. Specifically,
+    ``scope`` can be one of ``timm``, ``torchvision``, or ``custom``. When building a custom-defined classifier, the
+    model should be already registered under ``saliency_metrics.models.CUSTOM_CLASSIFIERS`` registry. When building a
+    classifier from ``torchvision`` or ``timm``, the ``model_name`` should be the name of corresponding builder
+    function, e.g., ``resnet18`` or ``efficientnet_b0``.
+
+    .. _timm: https://rwightman.github.io/pytorch-image-models/
+
+    .. _torchvision: https://pytorch.org/vision/stable/index.html
 
     Examples:
         Build a `torchvision` classifier:
@@ -63,6 +67,8 @@ def build_classifier(cfg: Dict, default_args: Optional[Dict] = None) -> nn.Modul
         .. code-block:: python
 
             from torchvision.models.resnet import ResNet
+            from saliency_metrics.models import build_classifier
+
             cfg_1 = dict(type="torchvision.resnet18, num_classes=2, pretrained=False)
             model = build_classifier(cfg_1)
             assert isinstance(model, ResNet)
@@ -72,6 +78,8 @@ def build_classifier(cfg: Dict, default_args: Optional[Dict] = None) -> nn.Modul
         .. code-block:: python
 
             from timm.models.efficientnet import EfficientNet
+            from saliency_metrics.models import build_classifier
+
             cfg_2 = dict(type="timm.efficientnet_b0, num_classes=2)
             model = build_classifier(cfg_2)
             assert isinstance(model, EfficientNet)
@@ -82,7 +90,7 @@ def build_classifier(cfg: Dict, default_args: Optional[Dict] = None) -> nn.Modul
 
             import torch
             import torch.nn as nn
-            from saliency_metrics.models import CUSTOM_CLASSIFIERS
+            from saliency_metrics.models import CUSTOM_CLASSIFIERS, build_classifier
 
             # First register the class
             @CUSTOM_CLASSIFIERS.register_module()

@@ -6,7 +6,7 @@ import torch.nn as nn
 def get_module(model: nn.Module, module: str) -> Optional[nn.Module]:
     r"""Returns a specific layer in a model based.
 
-    This function is adapted from `<TorchRay https://github.com/facebookresearch/TorchRay>_`.
+    This function is adapted from `TorchRay <https://github.com/facebookresearch/TorchRay>`_.
     :attr:`module` is either the name of a module (as given by the
     :func:`named_modules` function for :class:`torch.nn.Module` objects) or
     a :class:`torch.nn.Module` object. If :attr:`module` is a
@@ -18,7 +18,7 @@ def get_module(model: nn.Module, module: str) -> Optional[nn.Module]:
     Examples:
         .. code-block:: python
 
-            from saliency_metrics.models import build_classifier
+            from saliency_metrics.models import build_classifier, get_module
 
             cfg = dict(type="torchvision.resnet18", num_classes=2)
             model = build_classifier(cfg)
@@ -33,7 +33,7 @@ def get_module(model: nn.Module, module: str) -> Optional[nn.Module]:
         module: Name of layer.
 
     Returns:
-        Specific PyTorch layer (``None`` if the layer isn't found).
+        Specific ``nn.Module`` layer (``None`` if the layer isn't found).
     """
     if not isinstance(module, str):
         raise TypeError(f"module can only be a str, but got {module.__class__.__name__}")
@@ -57,7 +57,7 @@ def freeze_module(model: nn.Module, module: Optional[str] = None, eval_mode: boo
     Examples:
         .. code-block:: python
 
-            from saliency_metrics.models import build_classifier
+            from saliency_metrics.models import build_classifier, get_module
 
             model_1 = build_classifier(dict(type="timm.resnet18", num_classes=2))
             freeze_module(model_1, "fc", eval_mode=True)
@@ -72,7 +72,7 @@ def freeze_module(model: nn.Module, module: Optional[str] = None, eval_mode: boo
     Args:
         model: Model to be processed.
         module: The name of the target module. If None, the target module to be frozen is the entire model.
-        eval_mode: If True, turns the entire model into `eval` mode.
+        eval_mode: If True, turns the **entire** model into `eval` mode.
 
     Returns:
         None

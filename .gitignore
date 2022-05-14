@@ -2,6 +2,9 @@
 data/
 workdirs/
 
+# pytorch_sphinx_theme source code
+docs/src/
+
 
 # IDE and OS cache
 .idea
