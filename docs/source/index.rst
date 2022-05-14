@@ -5,7 +5,7 @@
 
 saliency-metrics
 ============================================
-``saliency-metrics`` is a framework for evaluating various explanation methods that intepret computer vision models.
+``saliency-metrics`` is a framework for evaluating various explanation methods that interpret computer vision models.
 It aims to provide different benchmarks for comparing explanation methods and facilitate the research in explainability.
 
 .. toctree::

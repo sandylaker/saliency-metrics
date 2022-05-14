@@ -55,7 +55,8 @@ def build_classifier(cfg: Dict, default_args: Optional[Dict] = None) -> nn.Modul
     ``scope`` can be one of ``timm``, ``torchvision``, or ``custom``. When building a custom-defined classifier, the
     model should be already registered under ``saliency_metrics.models.CUSTOM_CLASSIFIERS`` registry. When building a
     classifier from ``torchvision`` or ``timm``, the ``model_name`` should be the name of corresponding builder
-    function, e.g., ``resnet18`` or ``efficientnet_b0``.
+    function, e.g., ``resnet18``. I.e., ``cfg = dict(type="torchvision.resnet18,)`` is equivalent to call
+    ``torchvision.models.resnet18``.
 
     .. _timm: https://rwightman.github.io/pytorch-image-models/
 
@@ -111,7 +112,8 @@ def build_classifier(cfg: Dict, default_args: Optional[Dict] = None) -> nn.Modul
             assert isinstance(model, MLP)
 
     Args:
-        cfg: A config dict that contains at list the field "type".
+        cfg: A config dict that contains the arguments for building a classifier. It should at least contains the
+            field "type".
         default_args: Other default arguments.
 
     Returns:

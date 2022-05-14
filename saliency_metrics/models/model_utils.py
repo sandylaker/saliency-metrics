@@ -4,16 +4,12 @@ import torch.nn as nn
 
 
 def get_module(model: nn.Module, module: str) -> Optional[nn.Module]:
-    r"""Returns a specific layer in a model based.
+    r"""Get a specific layer in a model.
 
     This function is adapted from `TorchRay <https://github.com/facebookresearch/TorchRay>`_.
-    :attr:`module` is either the name of a module (as given by the
-    :func:`named_modules` function for :class:`torch.nn.Module` objects) or
-    a :class:`torch.nn.Module` object. If :attr:`module` is a
-    :class:`torch.nn.Module` object, then :attr:`module` is returned unchanged.
-    If :attr:`module` is a str, the function searches for a module with the
-    name :attr:`module` and returns a :class:`torch.nn.Module` if found;
-    otherwise, ``None`` is returned.
+    :attr:`module` is the name of a module (as given by the :func:`named_modules` function for :class:`torch.nn.Module`
+    objects). The function searches for a module with the name :attr:`module` and returns a :class:`torch.nn.Module`
+    if found; otherwise, ``None`` is returned.
 
     Examples:
         .. code-block:: python
