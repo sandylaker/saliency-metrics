@@ -8,4 +8,3 @@ pytest
 pytest-cov
 pytest-xdist
 setuptools
-sphinx
