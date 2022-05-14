@@ -47,8 +47,10 @@ def get_module(model: nn.Module, module: str) -> Optional[nn.Module]:
 def freeze_module(model: nn.Module, module: Optional[str] = None, eval_mode: bool = True) -> None:
     """Freeze a specific module of the model.
 
-    This function freezes a specific layer of the model by setting the `requires_grad` flag of its parameters to False.
-    It also converts the whole model into `eval` mode, if `eval_mode` is True.
+    This function freezes a specific layer of the model by setting the ``requires_grad`` flag of its parameters to
+    False. It also converts the whole model into evaluation_ mode, if ``eval_mode`` is True.
+
+    .. _evaluation: https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.eval
 
     Examples:
         .. code-block:: python
