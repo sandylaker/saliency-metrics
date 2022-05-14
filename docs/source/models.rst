@@ -3,14 +3,15 @@
 Models
 ======
 
-.. currentmodule:: saliency_metrics.data
+.. currentmodule:: saliency_metrics.models
 
-Build classifier
-----------------
-.. automodule:: saliency_metrics.models.build_classifier
-    :members:
+.. autosummary::
+    :nosignatures:
 
-Model Utilities
----------------
-.. automodule:: saliency_metrics.models.model_utils
+    build_classifier
+    freeze_module
+    get_module
+
+
+.. automodule:: saliency_metrics.models
     :members:
