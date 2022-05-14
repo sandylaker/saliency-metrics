@@ -112,7 +112,7 @@ def build_classifier(cfg: Dict, default_args: Optional[Dict] = None) -> nn.Modul
             assert isinstance(model, MLP)
 
     Args:
-        cfg: A config dict that contains the arguments for building a classifier. It should at least contains the
+        cfg: A config dict that contains the arguments for building a classifier. It should at least contain the
             field "type".
         default_args: Other default arguments.
 
