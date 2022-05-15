@@ -25,3 +25,7 @@ exclude = '''
   )/
 )
 '''
+
+[tool.pytest.ini_options]
+# albumentations 1.1.0: DeprecationWarning: Please use `gaussian_filter` from the `scipy.ndimage` namespace
+filterwarnings = ["ignore:::albumentations.augmentations.geometric.functional:6"]

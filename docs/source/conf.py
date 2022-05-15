@@ -19,7 +19,7 @@ from sphinx.builders.html import StandaloneHTMLBuilder
 
 import saliency_metrics
 
-autodoc_mock_imports = ["timm", "torchvision", "mmcv"]
+autodoc_mock_imports = ["timm", "torchvision", "mmcv", "albumentations"]
 
 # -- Project information -----------------------------------------------------
 
