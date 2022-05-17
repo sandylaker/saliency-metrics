@@ -9,7 +9,30 @@ Datasets
     :nosignatures:
 
     build_pipeline
+    build_dataset
+    ImageFolder
+    image_folder_collate_fn
 
 
-.. automodule:: saliency_metrics.datasets
+Dataset Classes
+---------------
+
+ImageFolder
+~~~~~~~~~~~
+.. autoclass:: ImageFolder
     :members:
+
+Functions
+---------
+
+build_dataset
+~~~~~~~~~~~~~
+.. autofunction:: build_dataset
+
+build_pipeline
+~~~~~~~~~~~~~~
+.. autofunction:: build_pipeline
+
+image_folder_collate_fn
+~~~~~~~~~~~~~~~~~~~~~~~
+.. autofunction:: image_folder_collate_fn
