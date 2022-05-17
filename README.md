@@ -1,5 +1,5 @@
 # saliency-metrics
-A Unified Framework for Benchmarking Explanation Methods in Computer Vision.
+An Open-source Framework for Benchmarking Explanation Methods in Computer Vision.
 
 ---
 [![Run unit tests](https://github.com/sandylaker/saliancy-metrics/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/sandylaker/saliancy-metrics/actions/workflows/unit-tests.yml)
