@@ -20,7 +20,7 @@ A Unified Framework for Benchmarking Explanation Methods in Computer Vision.
 * [ ] [Insertion/Deletion](https://arxiv.org/abs/1509.06321)
 * [ ] [ROAR](https://arxiv.org/abs/1806.10758)
 
-## Contributing Guideline
+## Contribution Guideline
 
 ### Set up environment
 1. Fork the repo and then clone it.
