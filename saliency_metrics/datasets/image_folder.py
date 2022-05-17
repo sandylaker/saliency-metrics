@@ -131,11 +131,11 @@ class ImageFolder(BaseDataset):
         if "ToTensor" in pipeline[-1]["type"]:
             # pre_pipeline will be shared by the image and saliency map
             # post_pipeline is ToTensor (or ToTensorV2), which only converts the image to tensor
-            self.pre_pipeline: Callable = build_pipeline(pipeline[:-1])
-            self.post_pipeline: Optional[Callable] = build_pipeline(pipeline[-1])
+            self.pre_pipeline: Callable = build_pipeline(pipeline[:-1])  # type: ignore
+            self.post_pipeline: Optional[Callable] = build_pipeline(pipeline[-1])  # type: ignore
         else:
-            self.pre_pipeline: Callable = build_pipeline(pipeline)
-            self.post_pipeline: Optional[Callable] = None
+            self.pre_pipeline: Callable = build_pipeline(pipeline)  # type: ignore
+            self.post_pipeline: Optional[Callable] = None  # type: ignore
 
         # each path is relative to self.img_root
         self.img_paths = [v for v in mmcv.scandir(self.img_root, suffix=IMG_EXTENSIONS, recursive=True)]
@@ -240,11 +240,11 @@ def image_folder_collate_fn(batch: List[Dict], smap_as_tensor: bool = False) -> 
     else:
         smap = None
 
-    batch = default_collate(batch)
+    collated_batch = default_collate(batch)
     if smap is not None:
-        batch.update({"smap": smap})
+        collated_batch.update({"smap": smap})
 
-    ori_height, ori_width = batch["meta"]["ori_size"]
+    ori_height, ori_width = collated_batch["meta"]["ori_size"]
     ori_size = list(zip(ori_height.tolist(), ori_width.tolist()))
-    batch["meta"].update(ori_size=ori_size)
-    return batch
+    collated_batch["meta"].update(ori_size=ori_size)
+    return collated_batch
