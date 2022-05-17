@@ -11,6 +11,13 @@ def get_module(model: nn.Module, module: str) -> Optional[nn.Module]:
     objects). The function searches for a module with the name :attr:`module` and returns a :class:`torch.nn.Module`
     if found; otherwise, ``None`` is returned.
 
+    Args:
+        model: Model in which to search for layer.
+        module: Name of layer.
+
+    Returns:
+        Specific ``nn.Module`` layer (``None`` if the layer isn't found).
+
     Examples:
         .. code-block:: python
 
@@ -24,12 +31,6 @@ def get_module(model: nn.Module, module: str) -> Optional[nn.Module]:
             # get the last BN layer
             _ = get_module(model, "layer4.1.bn2")
 
-    Args:
-        model: Model in which to search for layer.
-        module: Name of layer.
-
-    Returns:
-        Specific ``nn.Module`` layer (``None`` if the layer isn't found).
     """
     if not isinstance(module, str):
         raise TypeError(f"module can only be a str, but got {module.__class__.__name__}")
@@ -52,6 +53,14 @@ def freeze_module(model: nn.Module, module: Optional[str] = None, eval_mode: boo
 
     .. _evaluation: https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.eval
 
+    Args:
+        model: Model to be processed.
+        module: The name of the target module. If None, the target module to be frozen is the entire model.
+        eval_mode: If True, turns the **entire** model into `eval` mode.
+
+    Returns:
+        None
+
     Examples:
         .. code-block:: python
 
@@ -66,14 +75,6 @@ def freeze_module(model: nn.Module, module: Optional[str] = None, eval_mode: boo
             freeze_module(model_2, None)
             for p in model_2.parameters():
                 assert not p.requires_grad
-
-    Args:
-        model: Model to be processed.
-        module: The name of the target module. If None, the target module to be frozen is the entire model.
-        eval_mode: If True, turns the **entire** model into `eval` mode.
-
-    Returns:
-        None
     """
     if eval_mode:
         model.eval()

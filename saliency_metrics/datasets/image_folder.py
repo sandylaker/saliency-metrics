@@ -76,6 +76,17 @@ class ImageFolder(BaseDataset):
     - ``"meta"``: (``dict``) A dictionary containing meta information like image path (with key ``"img_path"``) and
       original size (with key ``"ori_size"``) of the image.
 
+    Args:
+        img_root: Root of the image folders.
+        pipeline: Config of transform pipeline.
+        smap_root: Root of the saliency map folders. If None, no saliency maps will be loaded.
+        smap_extension: File extension of the saliency maps. This argument only has influence when ``smap_root`` is not
+            None. If ``smap_extension`` is None, then the extension of the images will be used, this assumes that all
+            the images have the same extension.
+        cls_to_ind_file: Path of a file (json, yaml etc.) that can be de-serialized to a dictionary, which maps
+            class names to indices. If None, the class names (folder names under ``img_root``) will be sorted and
+            mapped to the sorted indices. For example, ``["a", "b"]`` will be mapped to ``[0, 1]``, respectively.
+
     Examples:
         .. code-block:: python
 
@@ -98,17 +109,6 @@ class ImageFolder(BaseDataset):
 
             dataset = build_dataset(cfg)
             assert isinstance(dataset, ImageFolder)
-
-    Args:
-        img_root: Root of the image folders.
-        pipeline: Config of transform pipeline.
-        smap_root: Root of the saliency map folders. If None, no saliency maps will be loaded.
-        smap_extension: File extension of the saliency maps. This argument only has influence when ``smap_root`` is not
-            None. If ``smap_extension`` is None, then the extension of the images will be used, this assumes that all
-            the images have the same extension.
-        cls_to_ind_file: Path of a file (json, yaml etc.) that can be de-serialized to a dictionary, which maps
-            class names to indices. If None, the class names (folder names under ``img_root``) will be sorted and
-            mapped to the sorted indices. For example, ``["a", "b"]`` will be mapped to ``[0, 1]``, respectively.
     """
 
     def __init__(

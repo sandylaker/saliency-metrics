@@ -62,6 +62,14 @@ def build_classifier(cfg: Dict, default_args: Optional[Dict] = None) -> nn.Modul
 
     .. _torchvision: https://pytorch.org/vision/stable/index.html
 
+    Args:
+        cfg: A config dict that contains the arguments for building a classifier. It should at least contain the
+            field "type".
+        default_args: Other default arguments.
+
+    Returns:
+        The classifier.
+
     Examples:
         Build a `torchvision` classifier:
 
@@ -110,14 +118,6 @@ def build_classifier(cfg: Dict, default_args: Optional[Dict] = None) -> nn.Modul
             cfg_3 = dict(type="custom.MLP")
             model = build_classifier(cfg_3, default_args=dict(hidden_size=5))
             assert isinstance(model, MLP)
-
-    Args:
-        cfg: A config dict that contains the arguments for building a classifier. It should at least contain the
-            field "type".
-        default_args: Other default arguments.
-
-    Returns:
-        The classifier.
     """
     cfg = deepcopy(cfg)
     if "type" not in cfg:
