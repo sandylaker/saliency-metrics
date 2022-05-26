@@ -19,7 +19,7 @@ from sphinx.builders.html import StandaloneHTMLBuilder
 
 import saliency_metrics
 
-autodoc_mock_imports = ["timm", "torchvision", "mmcv", "albumentations", "cv2"]
+autodoc_mock_imports = ["timm", "torchvision", "mmcv", "albumentations", "cv2", "ignite"]
 
 # -- Project information -----------------------------------------------------
 
@@ -48,6 +48,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.autosectionlabel",
     "sphinx_autodoc_typehints",
+    "sphinx_toolbox.more_autodoc.autoprotocol",
 ]
 
 autoclass_content = "class"

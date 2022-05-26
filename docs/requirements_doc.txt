@@ -3,6 +3,7 @@ numpy
 pydata-sphinx-theme
 sphinx
 sphinx-autodoc-typehints
+sphinx-toolbox
 sphinxcontrib-applehelp
 sphinxcontrib-devhelp
 sphinxcontrib-htmlhelp
