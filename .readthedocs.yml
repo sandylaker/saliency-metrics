@@ -11,11 +11,12 @@ sphinx:
 
 # Optionally set the version of Python and requirements required to build your docs
 python:
-  version: 3.7
   install:
     - requirements: docs/requirements_doc.txt
 #  system_packages: true
 
 
 build:
-  image: stable
+  os: ubuntu-20.04
+  tools:
+    python: "3.8"
