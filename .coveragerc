@@ -1,3 +1,7 @@
 [report]
 exclude_lines =
     @abstractmethod
+    pragma: no cover
+    if __name__ == .__main__.:
+    class .*\bProtocol\):
+    @(abc\.)?abstractmethod

@@ -8,3 +8,4 @@ API Reference
 
     models
     datasets
+    metrics

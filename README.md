@@ -24,14 +24,15 @@ An Open-source Framework for Benchmarking Explanation Methods in Computer Vision
 
 ### Set up environment
 1. Fork the repo and then clone it.
-2. Install pre-commit hooks: `pip install pre-commit` and then `pre-commit install`. The hooks will be
-automatically triggered when running `git commit`. One can also manually trigger the hooks with
-`pre-commit run --all-files`.
-3. (Optional) Install `torch`.
-4. Install the requirements for development: `pip install -r requirements_dev.txt`.
-5. Install the package in editable mode `pip install -e .` .
-6. (Optional) Add custom directories in `.git/info/exclude` to make them ignored by git. Note that
-some common directories like `.idea`, `.vscode` are already in the `.gitignore` file.
+2. :warning: Install python >= 3.8.
+3. Install pre-commit hooks: `pip install pre-commit` and then `pre-commit install`. The hooks will be
+  automatically triggered when running `git commit`. One can also manually trigger the hooks with
+  `pre-commit run --all-files`.
+4. (Optional) Install `torch`.
+5. Install the requirements for development: `pip install -r requirements_dev.txt`.
+6. Install the package in editable mode `pip install -e .` .
+7. (Optional) Add custom directories in `.git/info/exclude` to make them ignored by git. Note that
+  some common directories like `.idea`, `.vscode` are already in the `.gitignore` file.
 
 ### Code linter, formatter, and unit tests
 * [flake8](https://flake8.pycqa.org/en/latest/)

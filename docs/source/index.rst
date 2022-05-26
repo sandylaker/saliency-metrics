@@ -11,6 +11,9 @@ saliency-metrics
 ``saliency-metrics`` is a framework for evaluating various explanation methods that interpret computer vision models.
 It aims to provide different benchmarks for comparing explanation methods and facilitate the research in explainability.
 
+.. note::
+   The first formal version *(0.1.0)* of ``saliency-metrics`` is still a work in progress.
+
 
 Getting started
 ---------------
