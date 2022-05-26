@@ -8,6 +8,7 @@ Set up the environment
 ----------------------
 
 #. Fork the repo and then clone it.
+#. ⚠️ Install python >= 3.8.
 #. Install pre-commit hooks: ``pip install pre-commit`` and then ``pre-commit install``. The hooks will be automatically triggered when running `git commit`. One can also manually trigger the hooks with ``pre-commit run --all-files``.
 #. (Optional) Install ``torch``.
 #. Install the requirements for development: ``pip install -r requirements_dev.txt``.
