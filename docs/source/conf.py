@@ -67,6 +67,12 @@ source_suffix = {
     ".md": "markdown",
 }
 
+intersphinx_mapping = {
+    "python3": ("https://docs.python.org/3", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
+    "torch": ("https://pytorch.org/docs/stable/", None),
+}
+
 # The master toctree document.
 master_doc = "index"
 
@@ -101,6 +107,7 @@ html_theme_options = {
     "show_toc_level": 1,
     "footer_items": ["copyright"],
     "navbar_align": "content",
+    "show_prev_next": False,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
