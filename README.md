@@ -17,7 +17,7 @@ An Open-source Framework for Benchmarking Explanation Methods in Computer Vision
 
 * [ ] [Sanity Check](https://arxiv.org/abs/1810.03292)
 * [ ] [Sensitivity-N](https://arxiv.org/abs/1711.06104)
-* [ ] [Insertion/Deletion](https://arxiv.org/abs/1509.06321)
+* [ ] [Insertion/Deletion](https://arxiv.org/abs/1806.07421)
 * [ ] [ROAR](https://arxiv.org/abs/1806.10758)
 
 ## Contribution Guideline
