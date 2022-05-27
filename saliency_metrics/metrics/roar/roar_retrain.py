@@ -17,7 +17,7 @@ from mmcv.runner import build_optimizer
 
 from saliency_metrics.datasets import build_dataset
 from saliency_metrics.models import build_classifier
-from ..build_perturbations import build_perturbation
+from ..build_perturbation import build_perturbation
 from .roar_retrain_utils import *  # noqa:F403
 
 

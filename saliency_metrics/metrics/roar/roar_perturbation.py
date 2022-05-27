@@ -5,7 +5,7 @@ import torch
 from numpy import ndarray
 from torch import Tensor
 
-from ..build_perturbations import PERTURBATIONS, Perturbation
+from ..build_perturbation import PERTURBATIONS, Perturbation
 
 
 class RoarPerturbation(torch.nn.Module, Perturbation):

@@ -4,22 +4,24 @@ from typing import Dict, List, Tuple
 import mmcv
 import numpy as np
 
+from ..serializable_result import SerializableResult
 
-class RoarResults:
+
+class RoarResult(SerializableResult):
     """Helper class to record the ROAR training results.
 
     .. code-block:: python
 
         from saliency_metrics.metrics import RoarResults
 
-        roar_results = RoarResults()
+        roar_results = RoarResult()
         # Two top_fractions
         # At each top_fraction, there are three trials.
-        roar_results.add_single_result({0.1: [0.9, 0.91, 0.92]})
-        roar_results.add_single_result({0.2: [0.8, 0.81, 0.82]})
+        roar_result.add_single_result({0.1: [0.9, 0.91, 0.92]})
+        roar_result.add_single_result({0.2: [0.8, 0.81, 0.82]})
 
         # Average the accuracies across the trials and dump the result.
-        roar_results.average_and_dump("roar_avg_result.json")
+        roar_results.dump("roar_avg_result.json")
 
         # The dump file should be like this, note that the keys are converted to str.
         # For each top_fraction, mean and std of the accuracies are saved.
@@ -52,7 +54,7 @@ class RoarResults:
         # explicitly convert the values to python built-in floats for the sake of serialization
         return {k: (float(np.mean(v)), float(np.std(v))) for k, v in self._acc_dict.items()}
 
-    def average_and_dump(self, file_path: str) -> None:
+    def dump(self, file_path: str) -> None:
         """Average the accuracies and save the averaged result to a file.
 
         Args:

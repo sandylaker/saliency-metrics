@@ -10,7 +10,7 @@ from ignite.handlers import Timer
 from ignite.utils import setup_logger
 from torch.optim import Optimizer
 
-from ..build_perturbations import Perturbation
+from ..build_perturbation import Perturbation
 
 __all__ = [
     "get_train_step_fn",
