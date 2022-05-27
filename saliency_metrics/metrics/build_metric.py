@@ -81,7 +81,7 @@ class ReTrainingMetric(Protocol):
         """
         raise NotImplementedError
 
-    def get_result(self):
+    def get_result(self) -> SerializableResult:
         """Get the cached result.
 
         Returns:
