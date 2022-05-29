@@ -56,8 +56,8 @@ class CaptumGradCAM(AttributionMethod):
     def __init__(self, classifier: nn.Module, layer: str, **kwargs: Any) -> None:
         from captum.attr import LayerGradCam
 
-        layer: nn.Module = get_module(classifier, layer)
-        self._grad_cam = LayerGradCam(forward_func=classifier, layer=layer, **kwargs)
+        _layer: nn.Module = get_module(classifier, layer)
+        self._grad_cam = LayerGradCam(forward_func=classifier, layer=_layer, **kwargs)
 
     def attribute(
         self,
