@@ -27,5 +27,9 @@ exclude = '''
 '''
 
 [tool.pytest.ini_options]
-# albumentations 1.1.0: DeprecationWarning: Please use `gaussian_filter` from the `scipy.ndimage` namespace
-filterwarnings = ["ignore:::albumentations.augmentations.geometric.functional:6"]
+# 1. albumentations 1.1.0: DeprecationWarning: Please use `gaussian_filter` from the `scipy.ndimage` namespace
+# 2. captum 0.5.0: DeprecationWarning: Importing display from IPython.core.display is deprecated since IPython 7.14
+filterwarnings = [
+  "ignore:::albumentations.augmentations.geometric.functional:6",
+  "ignore:::captum.attr._utils.visualization:15",
+]
