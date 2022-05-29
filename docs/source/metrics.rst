@@ -17,7 +17,7 @@ Metrics
     SerializableResult
     ReInferenceMetric
     ReTrainingMetric
-
+    AttributionMethod
 
 Building Functions
 ------------------
@@ -48,3 +48,7 @@ Re-inference Based Metric
 Re-training Based Metric
 ~~~~~~~~~~~~~~~~~~~~~~~~
 .. autoprotocol:: ReTrainingMetric
+
+Attribution Method
+~~~~~~~~~~~~~~~~~~
+.. autoprotocol:: AttributionMethod
