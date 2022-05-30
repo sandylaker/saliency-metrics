@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 import torch
 
-from saliency_metrics.metrics import RoarPerturbation, build_perturbation
+from saliency_metrics.metrics import RoarPerturbation
 
 
 @pytest.fixture
@@ -16,12 +16,6 @@ def dummy_img_and_smap():
     smap_2 = np.arange(11, 20, dtype=float).reshape(3, 3)
     smap = np.stack([smap_1, smap_2], axis=0)
     yield img, smap
-
-
-def build_from_registry():
-    cfg = dict(type="RoarPerturbation", top_fraction=0.5)
-    ptb = build_perturbation(cfg)
-    assert isinstance(ptb, RoarPerturbation)
 
 
 def test_init(dummy_img_and_smap):

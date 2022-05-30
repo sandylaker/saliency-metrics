@@ -17,7 +17,7 @@ from mmcv.runner import build_optimizer
 
 from saliency_metrics.datasets import build_dataset
 from saliency_metrics.models import build_classifier
-from ..build_perturbation import build_perturbation
+from .roar_perturbation import RoarPerturbation
 from .roar_retrain_utils import *  # noqa:F403
 
 
@@ -50,7 +50,7 @@ def roar_single_trial(
     classifier = build_classifier(cfg.classifier)
     classifier.to(device)
     classifier = idist.auto_model(classifier, sync_bn=cfg.get("sync_bn", False))
-    ptb_fn = build_perturbation(cfg.ptb_fn)
+    ptb_fn = RoarPerturbation(cfg.ptb_fn)
     if isinstance(ptb_fn, nn.Module):
         ptb_fn = ptb_fn.to(device)
 

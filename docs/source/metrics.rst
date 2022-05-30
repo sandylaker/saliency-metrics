@@ -11,9 +11,7 @@ Metrics
 .. autosummary::
     :nosignatures:
 
-    build_perturbation
     build_metric
-    Perturbation
     SerializableResult
     ReInferenceMetric
     ReTrainingMetric
@@ -22,20 +20,12 @@ Metrics
 Building Functions
 ------------------
 
-build_perturbation
-~~~~~~~~~~~~~~~~~~
-.. autofunction:: build_perturbation
-
 build_metric
 ~~~~~~~~~~~~
 .. autofunction:: build_metric
 
 General Protocols and Base Classes
 ----------------------------------
-
-Perturbation
-~~~~~~~~~~~~
-.. autoprotocol:: Perturbation
 
 Serializable Result
 ~~~~~~~~~~~~~~~~~~~

@@ -5,10 +5,8 @@ import torch
 from numpy import ndarray
 from torch import Tensor
 
-from ..build_perturbation import PERTURBATIONS, Perturbation
 
-
-class RoarPerturbation(torch.nn.Module, Perturbation):
+class RoarPerturbation(torch.nn.Module):
     def __init__(self, top_fraction: float, mean: Optional[Sequence[float]] = None) -> None:
         super().__init__()
         if top_fraction < 0 or top_fraction > 1:
@@ -43,6 +41,3 @@ class RoarPerturbation(torch.nn.Module, Perturbation):
 
         output = mean * mask + img * (1 - mask)
         return output
-
-
-PERTURBATIONS.register_module(module=RoarPerturbation)

@@ -10,7 +10,7 @@ from ignite.handlers import Timer
 from ignite.utils import setup_logger
 from torch.optim import Optimizer
 
-from ..build_perturbation import Perturbation
+from .roar_perturbation import RoarPerturbation
 
 __all__ = [
     "get_train_step_fn",
@@ -24,7 +24,7 @@ __all__ = [
 
 def get_train_step_fn(
     classifier: nn.Module,
-    ptb_fn: Perturbation,
+    ptb_fn: RoarPerturbation,
     criterion: nn.Module,
     optimizer: Optimizer,
     device: Union[str, torch.device],
@@ -47,7 +47,7 @@ def get_train_step_fn(
 
 
 def get_eval_step_fn(
-    classifier: nn.Module, ptb_fn: Perturbation, device: Union[str, torch.device]
+    classifier: nn.Module, ptb_fn: RoarPerturbation, device: Union[str, torch.device]
 ) -> Callable[[Engine, Dict], Dict[str, torch.Tensor]]:  # pragma: no cover
     def _eval_step_fn(engine: Engine, batch: Dict) -> Dict:
         classifier.eval()
