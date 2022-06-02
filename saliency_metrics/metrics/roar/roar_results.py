@@ -10,6 +10,9 @@ from ..serializable_result import SerializableResult
 class RoarResult(SerializableResult):
     """Helper class to record the ROAR training results.
 
+    Args:
+        summarized: if True, compute the mean and std of accuracies in different trials at each ``top_fraction``.
+
     .. code-block:: python
 
         from saliency_metrics.metrics import RoarResults
@@ -28,7 +31,8 @@ class RoarResult(SerializableResult):
         # {"0.1": [0.91, 0.008164965809277268], "0.2": [0.81, 0.008164965809277223]}
     """
 
-    def __init__(self) -> None:
+    def __init__(self, summarized: bool = True) -> None:
+        self.summarized = summarized
         self._acc_dict: Dict[float, List[float]] = dict()
 
     def add_single_result(self, single_result: Dict[float, List[float]]) -> None:
@@ -65,5 +69,7 @@ class RoarResult(SerializableResult):
             keys will be converted to ``str``.
         """
         mmcv.mkdir_or_exist(osp.dirname(file_path))
-        avg_result = self.average()
-        mmcv.dump(avg_result, file=file_path)
+        if self.summarized:
+            mmcv.dump(self.average(), file=file_path)
+        else:
+            mmcv.dump(self._acc_dict, file=file_path)

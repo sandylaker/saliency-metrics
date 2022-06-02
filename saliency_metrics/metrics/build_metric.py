@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import Dict, Optional, Protocol, Union, runtime_checkable
 
-from mmcv import Registry
+from mmcv import Config, Registry
 from numpy import ndarray
 from torch import Tensor
 
@@ -66,11 +66,11 @@ class ReTrainingMetric(Protocol):
     _result: SerializableResult
 
     @abstractmethod
-    def evaluate(self, cfg: Dict, dist_args: Optional[Dict] = None) -> None:
+    def evaluate(self, cfg: Config, dist_args: Optional[Dict] = None) -> None:
         """Perform re-training evaluation on the whole dataset.
 
         Args:
-            cfg: Config dictionary. It specifies the hyper-parameters of e.g., dataset, model, optimizer, lr-scheduler,
+            cfg: Config. It specifies the hyper-parameters of e.g., dataset, model, optimizer, lr-scheduler,
                 max epochs etc.
             dist_args: DDP training hyper-parameters e.g. ``nproc_per_node``, ``backend`` etc. See also: `Parallel`_.
 
