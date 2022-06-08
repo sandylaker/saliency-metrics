@@ -4,8 +4,6 @@ from typing import Callable, Dict, List, Optional
 
 import cv2
 import mmcv
-import numpy as np
-import torch
 from torch.utils.data.dataloader import default_collate
 
 from .base_dataset import BaseDataset
@@ -35,8 +33,9 @@ IMG_EXTENSIONS = (
 class ImageFolder(BaseDataset):
     """Dataset in the `ImageFolder`_ style.
 
-    Compared to the ``torchvision.datasets.ImageFolder``, this class can load an image and its corresponding saliency
-    map (abbreviated as *"smap"*) simultaneously. It is assumed that the dataset folder has the following hierarchy:
+    Compared to the ``torchvision.datasets.ImageFolder``, this class can load
+    an image and its corresponding saliency map (abbreviated as *"smap"*) simultaneously. It is assumed that the
+    dataset folder has the following hierarchy:
 
     .. code-block::
 
@@ -71,7 +70,8 @@ class ImageFolder(BaseDataset):
     - ``"img"``: (``Union[torch.Tensor, numpy.ndarray]``) Transformed image. The image is converted to ``torch.Tensor``
       with shape (num_channels, height, width) if ``ToTensorV2`` (or ``ToTensor``) is in the transform pipeline.
       Otherwise, it is a ``numpy.ndarray`` with shape (height, width, num_channels).
-    - ``"smap"``: (``numpy.ndarray``) Saliency map with shape (height, width).
+    - ``"smap"``: (``numpy.ndarray``) Saliency map with shape (height, width). This field exists only when ``smap_root``
+      is not None.
     - ``"target"``: (``int``) Ground truth label.
     - ``"meta"``: (``dict``) A dictionary containing meta information like image path (with key ``"img_path"``) and
       original size (with key ``"ori_size"``) of the image.
@@ -127,15 +127,7 @@ class ImageFolder(BaseDataset):
 
         self.img_root = img_root
         self.smap_root = smap_root
-
-        if "ToTensor" in pipeline[-1]["type"]:
-            # pre_pipeline will be shared by the image and saliency map
-            # post_pipeline is ToTensor (or ToTensorV2), which only converts the image to tensor
-            self.pre_pipeline: Callable = build_pipeline(pipeline[:-1])  # type: ignore
-            self.post_pipeline: Optional[Callable] = build_pipeline(pipeline[-1])  # type: ignore
-        else:
-            self.pre_pipeline: Callable = build_pipeline(pipeline)  # type: ignore
-            self.post_pipeline: Optional[Callable] = None  # type: ignore
+        self.pipeline: Callable = build_pipeline(pipeline)  # type: ignore
 
         # each path is relative to self.img_root
         self.img_paths = [v for v in mmcv.scandir(self.img_root, suffix=IMG_EXTENSIONS, recursive=True)]
@@ -178,26 +170,14 @@ class ImageFolder(BaseDataset):
         else:
             smap = None
 
-        result = dict()
-        if smap is not None:
-            # saliency map will not be processed by the post_pipeline ( i.e. ``ToTensor`` transform)
-            pre_result = self.pre_pipeline(image=img, mask=smap)
-            smap = pre_result.pop("mask")
-            result.update({"smap": smap})
-        else:
-            pre_result = self.pre_pipeline(image=img)
-
-        img = pre_result["image"]
-        # It is also possible that ``ToTensor`` transform does not exist in the pipeline,
-        # i.e. post_transform is None. In this case the image will not be converted to tensor
-        if self.post_pipeline is not None:
-            img = self.post_pipeline(image=img)["image"]
-        result.update({"img": img})
+        transformed = self.pipeline(image=img) if smap is None else self.pipeline(image=img, mask=smap)
 
         img_folder, img_name_with_ext = osp.split(full_img_path)
         cls_name = osp.basename(img_folder)
         target = self._cls_to_ind[cls_name]
-        result.update({"target": target, "meta": meta})
+        result = {"target": target, "meta": meta, "img": transformed["image"]}
+        if smap is not None:
+            result.update({"smap": transformed["mask"]})
 
         return result
 
@@ -211,7 +191,7 @@ class ImageFolder(BaseDataset):
         return self._cls_to_ind
 
 
-def image_folder_collate_fn(batch: List[Dict], smap_as_tensor: bool = False) -> Dict:
+def image_folder_collate_fn(batch: List[Dict], smap_as_tensor: bool = True) -> Dict:
     """Collate function for :class:`saliency_metrics.datasets.image_folder.ImageFolder`.
 
     The collated batch is a dict that contains:
@@ -226,23 +206,17 @@ def image_folder_collate_fn(batch: List[Dict], smap_as_tensor: bool = False) -> 
 
     Args:
         batch: A batch of data with length of batch_size.
-        smap_as_tensor: If True, convert the batch of saliency maps to a tensor. Otherwise, just concatenate the
-            saliency maps to a ``numpy.ndarray``.
+        smap_as_tensor: If True, batch the saliency maps to a ``torch.Tensor``. Otherwise, batch them to
+            a ``numpy.ndarray``.
 
     Returns:
         Collated batch.
     """
-    if "smap" in batch[0]:
-        # pop the saliency maps from each sample
-        smap = np.stack([sample.pop("smap") for sample in batch], 0)
-        if smap_as_tensor:
-            smap = torch.as_tensor(smap, dtype=torch.float32)
-    else:
-        smap = None
+    has_smap = "smap" in batch[0]
 
     collated_batch = default_collate(batch)
-    if smap is not None:
-        collated_batch.update({"smap": smap})
+    if has_smap and not smap_as_tensor:
+        collated_batch.update({"smap": collated_batch["smap"].numpy()})
 
     ori_height, ori_width = collated_batch["meta"]["ori_size"]
     ori_size = list(zip(ori_height.tolist(), ori_width.tolist()))

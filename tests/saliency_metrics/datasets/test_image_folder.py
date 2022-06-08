@@ -141,15 +141,23 @@ def _test_image_folder(
             assert isinstance(sample["img"], torch.Tensor)
             assert sample["img"].shape == (3, 5, 5)
 
+            if with_smap:
+                assert isinstance(sample["smap"], torch.Tensor)
+                assert sample["smap"].shape == (5, 5)
+                assert sample["smap"].dtype == torch.uint8
+
+            else:
+                assert "smap" not in sample
         else:
             assert isinstance(sample["img"], np.ndarray)
             assert sample["img"].shape == (5, 5, 3)
 
-        if with_smap:
-            assert isinstance(sample["smap"], np.ndarray)
-            assert sample["smap"].shape == (5, 5)
-        else:
-            assert "smap" not in sample
+            if with_smap:
+                assert isinstance(sample["smap"], np.ndarray)
+                assert sample["smap"].shape == (5, 5)
+                assert sample["smap"].dtype == np.uint8
+            else:
+                assert "smap" not in sample
 
         img_path = sample["meta"]["img_path"]
         ori_size = sample["meta"]["ori_size"]
@@ -198,10 +206,11 @@ def test_image_folder_smap_does_not_exist(
     os.remove(new_img_path)
 
 
-def test_image_folder_collate_fn(image_folder_cfg_factory):
+@pytest.mark.parametrize("smap_as_tensor", [True, False])
+def test_image_folder_collate_fn(image_folder_cfg_factory, smap_as_tensor):
     cfg = image_folder_cfg_factory(with_smap=True, to_tensor=True, same_shape=True, with_cls_to_ind_file=True)
     dataset = build_dataset(cfg)
-    collate_fn = partial(image_folder_collate_fn, smap_as_tensor=False)
+    collate_fn = partial(image_folder_collate_fn, smap_as_tensor=smap_as_tensor)
     data_loader = DataLoader(dataset, batch_size=3, collate_fn=collate_fn)
     assert len(data_loader) == 1
     sample = next(iter(data_loader))
@@ -212,7 +221,10 @@ def test_image_folder_collate_fn(image_folder_cfg_factory):
 
     assert isinstance(img, torch.Tensor)
     assert img.shape == (3, 3, 5, 5)
-    assert isinstance(smap, np.ndarray)
+    if smap_as_tensor:
+        assert isinstance(smap, torch.Tensor)
+    else:
+        assert isinstance(smap, np.ndarray)
     assert smap.shape == (3, 5, 5)
     assert isinstance(target, torch.Tensor)
     assert target.shape == (3,)
