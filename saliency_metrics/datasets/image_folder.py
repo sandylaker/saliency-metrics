@@ -31,7 +31,9 @@ IMG_EXTENSIONS = (
 
 
 class ImageFolder(BaseDataset):
-    """Dataset in the `ImageFolder`_ style. Compared to the ``torchvision.datasets.ImageFolder``, this class can load
+    """Dataset in the `ImageFolder`_ style.
+
+    Compared to the ``torchvision.datasets.ImageFolder``, this class can load
     an image and its corresponding saliency map (abbreviated as *"smap"*) simultaneously. It is assumed that the
     dataset folder has the following hierarchy:
 
@@ -190,8 +192,9 @@ class ImageFolder(BaseDataset):
 
 
 def image_folder_collate_fn(batch: List[Dict], smap_as_tensor: bool = True) -> Dict:
-    """Collate function for :class:`saliency_metrics.datasets.image_folder.ImageFolder`. The collated batch is a dict
-    that contains:
+    """Collate function for :class:`saliency_metrics.datasets.image_folder.ImageFolder`.
+
+    The collated batch is a dict that contains:
 
     * ``"img"``: (``Tensor``) images with shape (batch_size, num_channels, height, width).
     * ``"target"``: (``Tensor``) targets with shape (batch_size,).
