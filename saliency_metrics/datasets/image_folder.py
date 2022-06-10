@@ -146,7 +146,7 @@ class ImageFolder(BaseDataset):
     def __getitem__(self, index: int) -> Dict:
         rel_img_path = self.img_paths[index]
         full_img_path = osp.join(self.img_root, rel_img_path)
-        img = cv2.imread(full_img_path, cv2.IMREAD_UNCHANGED)
+        img = cv2.imread(full_img_path)
         ori_size = img.shape[:2]
         meta = dict(img_path=full_img_path, ori_size=ori_size)
         if img.ndim == 3:
