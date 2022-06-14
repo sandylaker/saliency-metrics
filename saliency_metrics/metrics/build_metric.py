@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Dict, Optional, Protocol, Union, runtime_checkable
+from typing import Any, Dict, Optional, Protocol, Union, runtime_checkable
 
 from mmcv import Config, Registry
 from numpy import ndarray
@@ -33,13 +33,16 @@ class ReInferenceMetric(Protocol):
         raise NotImplementedError
 
     @abstractmethod
-    def evaluate(self, img: Union[Tensor, ndarray], smap: Union[Tensor, ndarray], target: Union[Tensor, int]) -> Dict:
+    def evaluate(
+        self, img: Union[Tensor, ndarray], smap: Union[Tensor, ndarray], target: Union[Tensor, int], **kwargs: Any
+    ) -> Dict:
         """Perform evaluation on a single sample.
 
         Args:
             img: Input image.
             smap: Saliency map.
             target: Ground-truth target.
+            kwargs: Other optional arguments for example the image path, original image size, and so on.
 
         Returns:
             Evaluation result on a single sample.
