@@ -26,7 +26,7 @@ for data in train_dataloader:
 classifier_config = dict(type="torchvision.resnet18", num_classes=10, pretrained=False)
 
 # Instantiate Class
-ins_del = InsertionDeletion(classifier_config, forward_batch_size=32, perturb_step_size=10, summarized=True)
+ins_del = InsertionDeletion(classifier_config, forward_batch_size=32, perturb_step_size=10, summarized=False)
 file_path = r"saliency_metrics\metrics\insertion_deletion\results.json"
 images = []
 smaps = []
@@ -37,4 +37,5 @@ for i in range(2):
     single_result = ins_del.evaluate(img, smap, target)
     ins_del.update(single_result)
 # TODO Discuss dump
-ins_del.dump(file_path)
+result = ins_del.get_result
+result.dump(file_path)
