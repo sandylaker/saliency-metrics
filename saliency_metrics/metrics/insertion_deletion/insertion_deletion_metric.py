@@ -68,5 +68,5 @@ class InsertionDeletion(ReInferenceMetric):
 
     # TODO - remove wrapper function
     @property
-    def result(self):
+    def get_result(self):
         return self._result
