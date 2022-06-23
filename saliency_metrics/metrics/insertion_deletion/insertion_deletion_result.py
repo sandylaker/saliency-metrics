@@ -11,16 +11,16 @@ class InsertionDeletionResult(SerializableResult):
     def __init__(
         self,
         summarized: bool = False,
-    ):
+    ) -> None:
 
         self.summarized = summarized
         # TODO check results and read mypy
         self.results: List[Dict[str, float]] = []
 
-    def add_single_result(self, single_result: Dict):
+    def add_single_result(self, single_result: Dict) -> None:
         self.results.append(single_result)
 
-    def dump(self, file_path: str):
+    def dump(self, file_path: str) -> None:
         if self.summarized:
             del_auc_array: List[float] = []
             ins_auc_array: List[float] = []
