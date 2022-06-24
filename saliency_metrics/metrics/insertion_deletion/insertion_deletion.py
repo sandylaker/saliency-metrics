@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 from torchvision import datasets
 from torchvision.transforms import ToTensor
 
-from saliency_metrics.metrics.insertion_deletion import InsertionDeletion
+from saliency_metrics.metrics.insertion_deletion.insertion_deletion_metric import InsertionDeletion
 
 
 def run_insertion_deletion() -> None:
