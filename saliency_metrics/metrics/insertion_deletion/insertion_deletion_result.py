@@ -14,7 +14,6 @@ class InsertionDeletionResult(SerializableResult):
     ) -> None:
 
         self.summarized = summarized
-        # TODO check results and read mypy
         self.results: List[Dict[str, float]] = []
 
     def add_single_result(self, single_result: Dict) -> None:
