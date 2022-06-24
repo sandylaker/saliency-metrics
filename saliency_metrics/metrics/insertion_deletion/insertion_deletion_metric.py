@@ -2,13 +2,13 @@ from typing import Dict, List
 
 import numpy as np
 import torch
-from insertion_deletion_perturbation import ProgressivePerturbation
-from insertion_deletion_result import InsertionDeletionResult
 from scipy.integrate import trapezoid
 from torchvision.transforms import GaussianBlur
 
 from saliency_metrics.metrics.build_metric import ReInferenceMetric
 from saliency_metrics.models.build_classifier import build_classifier
+from .insertion_deletion_perturbation import ProgressivePerturbation
+from .insertion_deletion_result import InsertionDeletionResult
 
 
 class InsertionDeletion(ReInferenceMetric):
@@ -24,13 +24,19 @@ class InsertionDeletion(ReInferenceMetric):
         self._result = InsertionDeletionResult(summarized)
 
         self.classifier = build_classifier(classifier_cfg)
+        # TODO - check
+        # self.classifier.eval()
         self.gaussian_blur = GaussianBlur(int(2 * sigma - 1), sigma)
         self.forward_batch_size = forward_batch_size
         self.perturb_step_size = perturb_step_size
 
-    # TODO check
     def evaluate(self, img: torch.Tensor, smap: torch.Tensor, target: int, img_path: str = None) -> Dict:
         num_pixels = torch.numel(smap)
+        # TODO - check
+        if self.perturb_step_size <= 0 or self.perturb_step_size >= num_pixels:
+            raise ValueError(
+                f"perturb_step_size should be greater than zero and less than the number of elements in smap, but got {self.perturb_step_size}."  # noqa:E501
+            )  # noqa:E501
         _, inds = torch.topk(smap.flatten(), num_pixels)
         row_inds, col_inds = (torch.tensor(x) for x in np.unravel_index(inds.numpy(), smap.size()))
 
