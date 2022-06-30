@@ -33,11 +33,9 @@ def run_insertion_deletion() -> None:
     # TODO - change file path
     file_path = r"saliency_metrics\metrics\insertion_deletion\results.json"
     for i in range(1):
-        # img = batch["img"][i]
-        # smap = batch["smaps"][i]
-        # target = batch["targets"][i].item()
-        img = torch.linspace(0, 1, 3072, dtype=torch.float32).reshape(3, 32, 32)
-        smap = torch.linspace(0, 1, 1024, dtype=torch.float32).reshape(32, 32)
+        img = batch["img"][i]
+        smap = batch["smaps"][i]
+        target = batch["targets"][i].item()
         target = 3
         img_path = r"user\somepath"
         single_result = ins_del.evaluate(img, smap, target, img_path)
