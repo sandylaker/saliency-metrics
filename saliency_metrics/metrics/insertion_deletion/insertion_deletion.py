@@ -11,7 +11,7 @@ from saliency_metrics.metrics.insertion_deletion.insertion_deletion_metric impor
 
 def parse_args() -> Namespace:
     parser = ArgumentParser("Run Insertion Deletion")
-    parser.add_argument("--work-dir", help="Output directory for storing files.")
+    parser.add_argument("--work-dir", default="workdirs/insertion_deletion", help="Output directory for storing files.")
     return parser.parse_args()
 
 
