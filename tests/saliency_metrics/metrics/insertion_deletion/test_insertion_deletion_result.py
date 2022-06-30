@@ -6,7 +6,7 @@ from saliency_metrics.metrics.insertion_deletion import InsertionDeletionResult
 
 
 @pytest.mark.parametrize("summarized", [False, True])
-def test_result_and_dump(summarized):
+def test_result_and_dump(summarized, tmp_path):
     id_result = InsertionDeletionResult(summarized=summarized)
     trial = [
         {
@@ -26,8 +26,7 @@ def test_result_and_dump(summarized):
     ]
     id_result.add_single_result(trial[0])
     id_result.add_single_result(trial[1])
-    # TODO - change file path
-    file_path = r"tests\saliency_metrics\metrics\insertion_deletion\id_result.json"
+    file_path = str(tmp_path / "id_result.json")
     id_result.dump(file_path)
     result = mmcv.load(file_path)
     if summarized:
