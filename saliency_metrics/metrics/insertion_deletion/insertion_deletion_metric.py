@@ -30,12 +30,18 @@ class InsertionDeletion(ReInferenceMetric):
         self.forward_batch_size = forward_batch_size
         self.perturb_step_size = perturb_step_size
 
+    # TODO - check default value for img_path
     def evaluate(self, img: torch.Tensor, smap: torch.Tensor, target: int, img_path: str = None) -> Dict:
         num_pixels = torch.numel(smap)
         # TODO - check
         if self.perturb_step_size <= 0 or self.perturb_step_size >= num_pixels:
             raise ValueError(
                 f"perturb_step_size should be greater than zero and less than the number of elements in smap, but got {self.perturb_step_size}."  # noqa:E501
+            )
+
+        if self.forward_batch_size <= 0:
+            raise ValueError(
+                f"forward_batch_size should be greater than zero, but got {self.forward_batch_size}."  # noqa:E501
             )  # noqa:E501
         _, inds = torch.topk(smap.flatten(), num_pixels)
         row_inds, col_inds = (torch.tensor(x) for x in np.unravel_index(inds.numpy(), smap.size()))
