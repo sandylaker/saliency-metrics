@@ -1,3 +1,4 @@
+from argparse import ArgumentParser, Namespace
 from typing import Dict, List
 
 import torch
@@ -8,7 +9,13 @@ from torchvision.transforms import ToTensor
 from saliency_metrics.metrics.insertion_deletion.insertion_deletion_metric import InsertionDeletion
 
 
-def run_insertion_deletion() -> None:
+def parse_args() -> Namespace:
+    parser = ArgumentParser("Run Insertion Deletion")
+    parser.add_argument("--work-dir", help="Output directory for storing files.")
+    return parser.parse_args()
+
+
+def run_insertion_deletion(work_dir: str) -> None:
     training_data = datasets.CIFAR10(root="data", train=True, download=True, transform=ToTensor())
 
     # Build dataloader
@@ -23,6 +30,7 @@ def run_insertion_deletion() -> None:
             smap = torch.mean(img, axis=0)
             smaps.append(smap)
         batch["smaps"] = torch.stack(smaps)
+        # preparing data for one batch
         break
 
     # Classifier Config
@@ -30,8 +38,7 @@ def run_insertion_deletion() -> None:
 
     # Instantiate Class
     ins_del = InsertionDeletion(classifier_config, forward_batch_size=32, perturb_step_size=10, summarized=False)
-    # TODO - change file path
-    file_path = r"saliency_metrics\metrics\insertion_deletion\results.json"
+    file_path = work_dir + r"\results.json"
     for i in range(1):
         img = batch["img"][i]
         smap = batch["smaps"][i]
@@ -45,4 +52,5 @@ def run_insertion_deletion() -> None:
 
 
 if __name__ == "__main__":
-    run_insertion_deletion()
+    args = parse_args()
+    run_insertion_deletion(args.work_dir)
