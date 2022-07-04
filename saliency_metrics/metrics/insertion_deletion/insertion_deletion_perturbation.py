@@ -1,4 +1,4 @@
-from typing import Iterator, List
+from typing import Iterator, List, Tuple
 
 import torch
 
@@ -8,7 +8,7 @@ class ProgressivePerturbation:
         self,
         input_tensor: torch.Tensor,
         replace_tensor: torch.Tensor,
-        sorted_inds: tuple[torch.Tensor, torch.Tensor],
+        sorted_inds: Tuple[torch.Tensor, torch.Tensor],
     ) -> None:
         self._current_tensor = input_tensor.clone()
         self._replace_tensor = replace_tensor
