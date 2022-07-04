@@ -51,15 +51,15 @@ def test_evaluate(dummy_img_and_smap, perturb_step_size, forward_batch_size):
                 "del_auc": 0.0796705037355423,
                 "ins_auc": 0.07898665964603424,
             }
-            assert single_result["ins_auc"] == expected_result["ins_auc"]
-            assert single_result["del_auc"] == expected_result["del_auc"]
+            assert single_result["ins_auc"] == pytest.approx(expected_result["ins_auc"], 1e-4)
+            assert single_result["del_auc"] == pytest.approx(expected_result["del_auc"], 1e-4)
             assert len(single_result["del_scores"]) == len(expected_result["del_scores"])
             assert len(single_result["ins_scores"]) == len(expected_result["ins_scores"])
             assert single_result["img_path"] == expected_result["img_path"]
             ins_del.update(single_result)
             test_result = ins_del.get_result
-            assert test_result.results[0]["ins_auc"] == expected_result["ins_auc"]
-            assert test_result.results[0]["del_auc"] == expected_result["del_auc"]
+            assert test_result.results[0]["ins_auc"] == pytest.approx(expected_result["ins_auc"], 1e-4)
+            assert test_result.results[0]["del_auc"] == pytest.approx(expected_result["del_auc"], 1e-4)
             assert len(test_result.results[0]["del_scores"]) == len(expected_result["del_scores"])
             assert len(test_result.results[0]["ins_scores"]) == len(expected_result["ins_scores"])
             assert test_result.results[0]["img_path"] == expected_result["img_path"]
