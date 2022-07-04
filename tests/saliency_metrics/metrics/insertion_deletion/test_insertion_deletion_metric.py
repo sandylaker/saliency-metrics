@@ -25,13 +25,13 @@ def test_evaluate(dummy_img_and_smap, perturb_step_size, forward_batch_size):
     )
     if perturb_step_size == 1025:
         with pytest.raises(ValueError, match="perturb_step_size should be"):
-            _ = ins_del.evaluate(img, smap, target, "user/somepath")
+            _ = ins_del.evaluate(img, smap, target, img_path="user/somepath")
     else:
         if forward_batch_size == 0:
             with pytest.raises(ValueError, match="forward_batch_size should be"):
-                _ = ins_del.evaluate(img, smap, target, "user/somepath")
+                _ = ins_del.evaluate(img, smap, target, img_path="user/somepath")
         else:
-            single_result = ins_del.evaluate(img, smap, target, "user/somepath")
+            single_result = ins_del.evaluate(img, smap, target, img_path="user/somepath")
             expected_result = {
                 "del_scores": [
                     0.09772268682718277,

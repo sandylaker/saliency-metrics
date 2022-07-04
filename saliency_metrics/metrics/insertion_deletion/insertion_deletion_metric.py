@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Any, Dict, List
 
 import numpy as np
 import torch
@@ -31,7 +31,7 @@ class InsertionDeletion(ReInferenceMetric):
         self.perturb_step_size = perturb_step_size
 
     # TODO - check default value for img_path
-    def evaluate(self, img: torch.Tensor, smap: torch.Tensor, target: int, img_path: str = None) -> Dict:
+    def evaluate(self, img: torch.Tensor, smap: torch.Tensor, target: int, **kwargs: Any) -> Dict:
         num_pixels = torch.numel(smap)
         # TODO - check
         if self.perturb_step_size <= 0 or self.perturb_step_size >= num_pixels:
@@ -75,7 +75,7 @@ class InsertionDeletion(ReInferenceMetric):
         single_result = {
             "del_scores": del_scores,
             "ins_scores": ins_scores,
-            "img_path": img_path,
+            "img_path": kwargs["img_path"],
             "del_auc": del_auc,
             "ins_auc": ins_auc,
         }

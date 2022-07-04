@@ -45,7 +45,7 @@ def run_insertion_deletion(work_dir: str) -> None:
         target = batch["targets"][i].item()
         target = 3
         img_path = r"user\somepath"
-        single_result = ins_del.evaluate(img, smap, target, img_path)
+        single_result = ins_del.evaluate(img, smap, target, img_path=img_path)
         ins_del.update(single_result)
     result = ins_del.get_result
     result.dump(file_path)
