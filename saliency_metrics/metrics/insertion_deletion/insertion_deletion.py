@@ -1,4 +1,3 @@
-from argparse import ArgumentParser, Namespace
 from typing import Dict, List
 
 import torch
@@ -7,12 +6,6 @@ from torchvision import datasets
 from torchvision.transforms import ToTensor
 
 from saliency_metrics.metrics.insertion_deletion.insertion_deletion_metric import InsertionDeletion
-
-
-def parse_args() -> Namespace:
-    parser = ArgumentParser("Run Insertion Deletion")
-    parser.add_argument("--work-dir", default="workdirs/insertion_deletion", help="Output directory for storing files.")
-    return parser.parse_args()
 
 
 def run_insertion_deletion(work_dir: str) -> None:
@@ -49,8 +42,3 @@ def run_insertion_deletion(work_dir: str) -> None:
         ins_del.update(single_result)
     result = ins_del.get_result
     result.dump(file_path)
-
-
-if __name__ == "__main__":
-    args = parse_args()
-    run_insertion_deletion(args.work_dir)
