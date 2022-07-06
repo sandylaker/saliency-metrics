@@ -7,6 +7,7 @@ from torchvision.transforms import GaussianBlur
 
 from saliency_metrics.metrics.build_metric import ReInferenceMetric
 from saliency_metrics.models.build_classifier import build_classifier
+from saliency_metrics.models.model_utils import freeze_module
 from .insertion_deletion_perturbation import ProgressivePerturbation
 from .insertion_deletion_result import InsertionDeletionResult
 
@@ -24,8 +25,7 @@ class InsertionDeletion(ReInferenceMetric):
         self._result = InsertionDeletionResult(summarized)
 
         self.classifier = build_classifier(classifier_cfg)
-        # TODO - check
-        # self.classifier.eval()
+        freeze_module(self.classifier, eval_mode=True)
         self.gaussian_blur = GaussianBlur(int(2 * sigma - 1), sigma)
         self.forward_batch_size = forward_batch_size
         self.perturb_step_size = perturb_step_size
