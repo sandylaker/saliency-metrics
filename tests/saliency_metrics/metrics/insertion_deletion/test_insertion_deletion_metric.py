@@ -28,8 +28,8 @@ class TestNet(nn.Module):
     def initialize_weights(self) -> None:
         for i, x in enumerate(self.parameters()):
             prng = np.random.RandomState(i)
-            new_paremeters = prng.uniform(0, 0.02, x.shape)
-            x.data = torch.tensor(new_paremeters, dtype=torch.float32)
+            new_parameters = prng.uniform(0, 0.02, x.shape)
+            x.data = torch.tensor(new_parameters, dtype=torch.float32)
 
 
 @pytest.fixture
