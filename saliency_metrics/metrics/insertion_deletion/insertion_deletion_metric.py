@@ -30,7 +30,6 @@ class InsertionDeletion(ReInferenceMetric):
         self.forward_batch_size = forward_batch_size
         self.perturb_step_size = perturb_step_size
 
-    # TODO - check default value for img_path
     def evaluate(self, img: torch.Tensor, smap: torch.Tensor, target: int, **kwargs: Any) -> Dict:
         num_pixels = torch.numel(smap)
         # TODO - check
