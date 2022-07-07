@@ -7,7 +7,6 @@ from .insertion_deletion import (  # isort:skip
     InsertionDeletion,
     InsertionDeletionResult,
     ProgressivePerturbation,
-    run_insertion_deletion,
 )
 
 __all__ = [

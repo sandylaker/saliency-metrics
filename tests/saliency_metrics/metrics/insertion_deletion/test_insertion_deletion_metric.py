@@ -3,7 +3,7 @@ import pytest
 import torch
 import torch.nn as nn
 
-from saliency_metrics.metrics.insertion_deletion.insertion_deletion_metric import InsertionDeletion
+from saliency_metrics.metrics.insertion_deletion.insertion_deletion import InsertionDeletion
 from saliency_metrics.models import CUSTOM_CLASSIFIERS
 
 
