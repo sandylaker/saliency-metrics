@@ -1,13 +1,8 @@
 from .attribution_method import AttributionMethod, CaptumGradCAM
 from .build_metric import METRICS, ReInferenceMetric, ReTrainingMetric, build_metric
+from .insertion_deletion import InsertionDeletion, InsertionDeletionResult, ProgressivePerturbation
 from .roar import ROAR, RoarPerturbation, RoarResult, roar_single_trial
 from .serializable_result import SerializableResult
-
-from .insertion_deletion import (  # isort:skip
-    InsertionDeletion,
-    InsertionDeletionResult,
-    ProgressivePerturbation,
-)
 
 __all__ = [
     "AttributionMethod",
@@ -24,5 +19,4 @@ __all__ = [
     "InsertionDeletion",
     "ProgressivePerturbation",
     "InsertionDeletionResult",
-    "run_insertion_deletion",
 ]
