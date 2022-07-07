@@ -33,7 +33,7 @@ def run_insertion_deletion(work_dir: str) -> None:
     ins_del = InsertionDeletion(classifier_config, forward_batch_size=32, perturb_step_size=10, summarized=False)
     file_path = work_dir + r"\results.json"
     for i in range(1):
-        img = batch["img"][i]
+        img = torch.unsqueeze(batch["img"][i], dim=0)
         smap = batch["smaps"][i]
         target = batch["targets"][i].item()
         target = 3
