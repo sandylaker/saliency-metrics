@@ -28,20 +28,24 @@ class InsertionDeletion(ReInferenceMetric):
         freeze_module(self.classifier, eval_mode=True)
         self.gaussian_blur = GaussianBlur(int(2 * sigma - 1), sigma)
         self.forward_batch_size = forward_batch_size
+        if self.forward_batch_size <= 0:
+            raise ValueError(
+                f"forward_batch_size should be greater than zero, but got {self.forward_batch_size}."  # noqa:E501
+            )
         self.perturb_step_size = perturb_step_size
-
-    def evaluate(self, img: torch.Tensor, smap: torch.Tensor, target: int, **kwargs: Any) -> Dict:
-        num_pixels = torch.numel(smap)
-        # TODO - check
-        if self.perturb_step_size <= 0 or self.perturb_step_size >= num_pixels:
+        if self.perturb_step_size <= 0:
             raise ValueError(
                 f"perturb_step_size should be greater than zero and less than the number of elements in smap, but got {self.perturb_step_size}."  # noqa:E501
             )
 
-        if self.forward_batch_size <= 0:
+    def evaluate(self, img: torch.Tensor, smap: torch.Tensor, target: int, **kwargs: Any) -> Dict:
+        num_pixels = torch.numel(smap)
+        # TODO - check
+        if self.perturb_step_size >= num_pixels:
             raise ValueError(
-                f"forward_batch_size should be greater than zero, but got {self.forward_batch_size}."  # noqa:E501
-            )  # noqa:E501
+                f"perturb_step_size should be less than the number of elements in smap, but got {self.perturb_step_size}."  # noqa:E501
+            )
+
         _, inds = torch.topk(smap.flatten(), num_pixels)
         row_inds, col_inds = (torch.tensor(x) for x in np.unravel_index(inds.numpy(), smap.size()))
 
