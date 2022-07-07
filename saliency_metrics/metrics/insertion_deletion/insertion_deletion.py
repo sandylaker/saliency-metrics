@@ -1,44 +1,98 @@
-from typing import Dict, List
+from typing import Any, Dict, List
 
+import numpy as np
 import torch
-from torch.utils.data import DataLoader
-from torchvision import datasets
-from torchvision.transforms import ToTensor
+from scipy.integrate import trapezoid
+from torchvision.transforms import GaussianBlur
 
-from saliency_metrics.metrics.insertion_deletion.insertion_deletion_metric import InsertionDeletion
+from saliency_metrics.metrics.build_metric import METRICS, ReInferenceMetric
+from saliency_metrics.models.build_classifier import build_classifier
+from saliency_metrics.models.model_utils import freeze_module
+from .insertion_deletion_perturbation import ProgressivePerturbation
+from .insertion_deletion_result import InsertionDeletionResult
 
 
-def run_insertion_deletion(work_dir: str) -> None:
-    training_data = datasets.CIFAR10(root="data", train=True, download=True, transform=ToTensor())
+class InsertionDeletion(ReInferenceMetric):
+    def __init__(
+        self,
+        classifier_cfg: Dict,
+        forward_batch_size: int = 128,
+        perturb_step_size: int = 10,
+        sigma: float = 5.0,
+        summarized: bool = False,
+    ) -> None:
 
-    # Build dataloader
-    batch_size = 16
-    train_dataloader = DataLoader(training_data, batch_size=batch_size, shuffle=True)
-    batch: Dict[str, torch.tensor] = {}
-    for data in train_dataloader:
-        batch["img"] = data[0]
-        batch["targets"] = data[1]
-        smaps: List[torch.tensor] = []
-        for img in data[0]:
-            smap = torch.mean(img, axis=0)
-            smaps.append(smap)
-        batch["smaps"] = torch.stack(smaps)
-        # preparing data for one batch
-        break
+        self._result = InsertionDeletionResult(summarized)
 
-    # Classifier Config
-    classifier_config = dict(type="torchvision.resnet18", num_classes=10, pretrained=False)
+        self.classifier = build_classifier(classifier_cfg)
+        freeze_module(self.classifier, eval_mode=True)
+        self.gaussian_blur = GaussianBlur(int(2 * sigma - 1), sigma)
+        self.forward_batch_size = forward_batch_size
+        if self.forward_batch_size <= 0:
+            raise ValueError(
+                f"forward_batch_size should be greater than zero, but got {self.forward_batch_size}."  # noqa:E501
+            )
+        self.perturb_step_size = perturb_step_size
+        if self.perturb_step_size <= 0:
+            raise ValueError(
+                f"perturb_step_size should be greater than zero and less than the number of elements in smap, but got {self.perturb_step_size}."  # noqa:E501
+            )
 
-    # Instantiate Class
-    ins_del = InsertionDeletion(classifier_config, forward_batch_size=32, perturb_step_size=10, summarized=False)
-    file_path = work_dir + r"\results.json"
-    for i in range(1):
-        img = torch.unsqueeze(batch["img"][i], dim=0)
-        smap = batch["smaps"][i]
-        target = batch["targets"][i].item()
-        target = 3
-        img_path = r"user\somepath"
-        single_result = ins_del.evaluate(img, smap, target, img_path=img_path)
-        ins_del.update(single_result)
-    result = ins_del.get_result
-    result.dump(file_path)
+    def evaluate(self, img: torch.Tensor, smap: torch.Tensor, target: int, **kwargs: Any) -> Dict:
+        num_pixels = torch.numel(smap)
+        # TODO - check
+        if self.perturb_step_size >= num_pixels:
+            raise ValueError(
+                f"perturb_step_size should be less than the number of elements in smap, but got {self.perturb_step_size}."  # noqa:E501
+            )
+
+        if img.dim() != 4 or img.size()[0] != 1:
+            raise ValueError(f"img should have 4 dimensions - 1*C*H*W but got {img.size()}.")
+
+        _, inds = torch.topk(smap.flatten(), num_pixels)
+        row_inds, col_inds = (torch.tensor(x) for x in np.unravel_index(inds.numpy(), smap.size()))
+
+        # deletion
+        del_perturbation = ProgressivePerturbation(img, torch.zeros_like(img), (row_inds, col_inds))
+        del_scores: List[float] = []
+        with torch.no_grad():
+            for batch in del_perturbation.perturb(
+                forward_batch_size=self.forward_batch_size, perturb_step_size=self.perturb_step_size
+            ):
+                scores = torch.softmax(self.classifier(batch), -1)[:, target]
+                del_scores.append(scores.cpu().numpy())
+
+        del_scores = np.concatenate(del_scores, 0)
+        del_auc = trapezoid(del_scores, dx=1.0 / len(del_scores))
+
+        blurred_img = self.gaussian_blur(img)
+        ins_perturbation = ProgressivePerturbation(blurred_img, img, (row_inds, col_inds))
+        ins_scores: List[float] = []
+        with torch.no_grad():
+            for batch in ins_perturbation.perturb(
+                forward_batch_size=self.forward_batch_size, perturb_step_size=self.perturb_step_size
+            ):
+                scores = torch.softmax(self.classifier(batch), -1)[:, target]
+                ins_scores.append(scores.cpu().numpy())
+
+        ins_scores = np.concatenate(ins_scores, 0)
+        ins_auc = trapezoid(ins_scores, dx=1.0 / len(ins_scores))
+
+        single_result = {
+            "del_scores": del_scores,
+            "ins_scores": ins_scores,
+            "img_path": kwargs["img_path"],
+            "del_auc": del_auc,
+            "ins_auc": ins_auc,
+        }
+        return single_result
+
+    def update(self, single_result: Dict) -> None:
+        self._result.add_single_result(single_result)
+
+    @property
+    def get_result(self) -> InsertionDeletionResult:
+        return self._result
+
+
+METRICS.register_module(module=InsertionDeletion)
