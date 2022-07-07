@@ -40,7 +40,6 @@ class InsertionDeletion(ReInferenceMetric):
 
     def evaluate(self, img: torch.Tensor, smap: torch.Tensor, target: int, **kwargs: Any) -> Dict:
         num_pixels = torch.numel(smap)
-        # TODO - check
         if self.perturb_step_size >= num_pixels:
             raise ValueError(
                 f"perturb_step_size should be less than the number of elements in smap, but got {self.perturb_step_size}."  # noqa:E501
