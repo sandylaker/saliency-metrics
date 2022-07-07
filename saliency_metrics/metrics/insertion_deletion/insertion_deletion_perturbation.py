@@ -25,15 +25,13 @@ class ProgressivePerturbation:
     def perturb(self, forward_batch_size: int = 128, perturb_step_size: int = 10) -> Iterator[torch.Tensor]:
         pixels_perturbed = 0
         while pixels_perturbed < self._num_pixels:
-            num_perturbed_samples = 0
             perturbed_images_batch: List[torch.tensor] = []
-            while num_perturbed_samples < forward_batch_size:
+            for _ in range(forward_batch_size):
                 step_size = min(perturb_step_size, (self._num_pixels - pixels_perturbed))
                 perturbed_row_indices = self._row_inds[pixels_perturbed : pixels_perturbed + step_size]
                 perturbed_col_indices = self._col_inds[pixels_perturbed : pixels_perturbed + step_size]
                 self._perturb_by_inds(perturbed_row_indices, perturbed_col_indices)
                 perturbed_images_batch.append(self.current_tensor)
-                num_perturbed_samples += 1
                 pixels_perturbed += step_size
                 if pixels_perturbed >= self._num_pixels:
                     break
