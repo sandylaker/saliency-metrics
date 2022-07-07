@@ -16,27 +16,26 @@ class ProgressivePerturbation:
         self._num_pixels = self._row_inds.size()[0]
 
     def _perturb_by_inds(self, row_inds: torch.Tensor, col_inds: torch.Tensor) -> None:
-        self._current_tensor[:, row_inds, col_inds] = self._replace_tensor[:, row_inds, col_inds]
+        self._current_tensor[..., row_inds, col_inds] = self._replace_tensor[..., row_inds, col_inds]
 
     @property
     def current_tensor(self) -> torch.Tensor:
-        return self._current_tensor
+        return self._current_tensor.clone()
 
     def perturb(self, forward_batch_size: int = 128, perturb_step_size: int = 10) -> Iterator[torch.Tensor]:
         pixels_perturbed = 0
         while pixels_perturbed < self._num_pixels:
-            forward_batch_count = 0
+            num_perturbed_samples = 0
             perturbed_images_batch: List[torch.tensor] = []
-            while forward_batch_count < forward_batch_size:
+            while num_perturbed_samples < forward_batch_size:
                 step_size = min(perturb_step_size, (self._num_pixels - pixels_perturbed))
                 perturbed_row_indices = self._row_inds[pixels_perturbed : pixels_perturbed + step_size]
                 perturbed_col_indices = self._col_inds[pixels_perturbed : pixels_perturbed + step_size]
                 self._perturb_by_inds(perturbed_row_indices, perturbed_col_indices)
-                # TODO - check if only detach works - RESULT - doesn't work
-                perturbed_images_batch.append(self.current_tensor.clone().detach())
-                forward_batch_count += 1
+                perturbed_images_batch.append(self.current_tensor)
+                num_perturbed_samples += 1
                 pixels_perturbed += step_size
                 if pixels_perturbed >= self._num_pixels:
                     break
-            batch = torch.stack(perturbed_images_batch)
+            batch = torch.cat(perturbed_images_batch, dim=0)
             yield batch
