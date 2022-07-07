@@ -73,7 +73,7 @@ def test_evaluate(dummy_img_and_smap, perturb_step_size, img_dimensions):
             _ = ins_del.evaluate(img, smap, target, img_path="user/somepath")
     else:
         if img_dimensions == 3:
-            with pytest.raises(ValueError, match="img should have"):
+            with pytest.raises(ValueError, match="img should be"):
                 _ = ins_del.evaluate(torch.squeeze(img, 0), smap, target, img_path="user/somepath")
         else:
             single_result = ins_del.evaluate(img, smap, target, img_path="user/somepath")
