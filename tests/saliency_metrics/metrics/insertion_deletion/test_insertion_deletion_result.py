@@ -31,10 +31,10 @@ def test_result_and_dump(summarized, tmp_path):
     result = mmcv.load(file_path)
     if summarized:
         expected_output = {
-            "mean_insertion_auc": np.mean([0.3, 0.4]),
-            "std_insertion_auc": np.std([0.3, 0.4]),
-            "mean_deletion_auc": np.mean([0.1, 0.2]),
-            "std_deletion_auc": np.std([0.1, 0.2]),
+            "mean_ins_auc": np.mean([0.3, 0.4]),
+            "std_ins_auc": np.std([0.3, 0.4]),
+            "mean_del_auc": np.mean([0.1, 0.2]),
+            "std_del_auc": np.std([0.1, 0.2]),
             "num_samples": 2,
         }
         assert result == expected_output

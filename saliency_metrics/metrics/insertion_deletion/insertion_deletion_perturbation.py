@@ -23,17 +23,17 @@ class ProgressivePerturbation:
         return self._current_tensor.clone()
 
     def perturb(self, forward_batch_size: int = 128, perturb_step_size: int = 10) -> Iterator[torch.Tensor]:
-        pixels_perturbed = 0
-        while pixels_perturbed < self._num_pixels:
+        num_perturbed_pixels = 0
+        while num_perturbed_pixels < self._num_pixels:
             perturbed_images_batch: List[torch.tensor] = []
             for _ in range(forward_batch_size):
-                step_size = min(perturb_step_size, (self._num_pixels - pixels_perturbed))
-                perturbed_row_indices = self._row_inds[pixels_perturbed : pixels_perturbed + step_size]
-                perturbed_col_indices = self._col_inds[pixels_perturbed : pixels_perturbed + step_size]
+                step_size = min(perturb_step_size, (self._num_pixels - num_perturbed_pixels))
+                perturbed_row_indices = self._row_inds[num_perturbed_pixels : num_perturbed_pixels + step_size]
+                perturbed_col_indices = self._col_inds[num_perturbed_pixels : num_perturbed_pixels + step_size]
                 self._perturb_by_inds(perturbed_row_indices, perturbed_col_indices)
                 perturbed_images_batch.append(self.current_tensor)
-                pixels_perturbed += step_size
-                if pixels_perturbed >= self._num_pixels:
+                num_perturbed_pixels += step_size
+                if num_perturbed_pixels >= self._num_pixels:
                     break
             batch = torch.cat(perturbed_images_batch, dim=0)
             yield batch

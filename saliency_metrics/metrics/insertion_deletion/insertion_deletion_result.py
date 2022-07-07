@@ -27,10 +27,10 @@ class InsertionDeletionResult(SerializableResult):
                 del_auc_scores_list.append(result["del_auc"])
                 ins_auc_scores_list.append(result["ins_auc"])
             summarized_result = {
-                "mean_insertion_auc": np.mean(ins_auc_scores_list),
-                "std_insertion_auc": np.std(ins_auc_scores_list),
-                "mean_deletion_auc": np.mean(del_auc_scores_list),
-                "std_deletion_auc": np.std(del_auc_scores_list),
+                "mean_ins_auc": np.mean(ins_auc_scores_list),
+                "std_ins_auc": np.std(ins_auc_scores_list),
+                "mean_del_auc": np.mean(del_auc_scores_list),
+                "std_del_auc": np.std(del_auc_scores_list),
                 "num_samples": len(del_auc_scores_list),
             }
             mmcv.mkdir_or_exist(osp.dirname(file_path))
