@@ -46,6 +46,9 @@ class InsertionDeletion(ReInferenceMetric):
                 f"perturb_step_size should be less than the number of elements in smap, but got {self.perturb_step_size}."  # noqa:E501
             )
 
+        if img.dim() != 4 or img.size()[0] != 1:
+            raise ValueError(f"img should have 4 dimensions - 1*C*H*W but got {img.size()}.")
+
         _, inds = torch.topk(smap.flatten(), num_pixels)
         row_inds, col_inds = (torch.tensor(x) for x in np.unravel_index(inds.numpy(), smap.size()))
 
