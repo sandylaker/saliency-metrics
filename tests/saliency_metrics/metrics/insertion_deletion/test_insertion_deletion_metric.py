@@ -41,7 +41,7 @@ def dummy_img_and_smap():
     yield img, smap
 
 
-@pytest.mark.parametrize("perturb_step_size", [250, 1025])
+@pytest.mark.parametrize("perturb_step_size", [0, 10])
 @pytest.mark.parametrize("forward_batch_size", [0, 32])
 def test_init(perturb_step_size, forward_batch_size):
     classifier_cfg = dict(type="custom.TestNet")
