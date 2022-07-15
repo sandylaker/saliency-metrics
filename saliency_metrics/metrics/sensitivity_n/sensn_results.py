@@ -31,16 +31,16 @@ class SensitivityNResult(SerializableResult):
             keys will be converted to ``str``.
         """
         if self.summarized:
-            n_array: List[int] = []
-            correlation_array: List[float] = []
+            n_list: List[int] = []
+            correlation_list: List[float] = []
             for result in self.results:
                 """TO DO indexing array."""
-                n_array.append(result["n"])
-                correlation_array.append(result["correlation"])
+                n_list.append(result["n"])
+                correlation_list.append(result["correlation"])
                 summarized_result = {
-                    "n": n_array,
-                    "mean_correlation": np.mean(correlation_array),
-                    "std_correlation": np.std(correlation_array),
+                    "n": n_list,
+                    "mean_correlation": np.mean(correlation_list),
+                    "std_correlation": np.std(correlation_list),
                 }
             mmcv.mkdir_or_exist(osp.dirname(file_path))
             mmcv.dump(summarized_result, file_path)
