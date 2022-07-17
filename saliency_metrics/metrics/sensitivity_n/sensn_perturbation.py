@@ -20,26 +20,26 @@ class SensitivityNPerturbation:
         """
         masks: List[torch.Tensor] = []
         h, w = spatial_size
+
         for _ in range(self.num_masks):
             inds = np.random.choice(h * w, self._n, replace=False)
             inds = np.unravel_index(inds, (h, w))
             mask = np.zeros(spatial_size)
             mask[inds] = 1
             mask = 1 - mask
-            masks.append(torch.Tensor(mask, dtype=torch.float32, device=device))
+            masks.append(torch.tensor(mask, dtype=torch.float32, device=device))
         return masks
 
     def perturb(self, img: torch.Tensor, smap: torch.Tensor) -> Tuple[torch.Tensor, np.ndarray]:
+        batched_samples = []
+        sum_attributions = []
         if self._masks is None:
             spatial_size = img.shape[-2:]
             self._masks = self._generate_random_masks(spatial_size, device=img.device)
-            batched_samples = []
-            sum_attributions = []
-            for i, x in self._masks:
-                batched_samples.append(img * self._masks[i])
-                sum_attributions.append((smap * self._masks[i]).sum())
+            for j, x in enumerate(self._masks):
+                batched_samples.append(img * self._masks[j])
+                sum_attributions.append((smap * self._masks[j]).sum())
             batched_samples.append(img)
-
             sum_attributions = torch.stack(sum_attributions).numpy()
             batched_samples = torch.stack(batched_samples)
 
