@@ -29,29 +29,26 @@ class InsertionDeletion(ReInferenceMetric):
         self.gaussian_blur = GaussianBlur(int(2 * sigma - 1), sigma)
         self.forward_batch_size = forward_batch_size
         if self.forward_batch_size <= 0:
-            raise ValueError(
-                f"""forward_batch_size should be greater than zero, but got
-                {self.forward_batch_size}."""
-            )
+            raise ValueError("forwarded_batch_size should be greater than zero, " f"but got {self.forward_batch_size}.")
         self.perturb_step_size = perturb_step_size
         if self.perturb_step_size <= 0:
             raise ValueError(
-                f"""perturb_step_size should be greater than zero and less than the number of elements in smap,
-                but got {self.perturb_step_size}."""
+                "perturb_step_size should be greater than zero and"
+                f"less than the number of elements in smap, but got {self.perturb_step_size}."
             )
 
     def evaluate(self, img: torch.Tensor, smap: torch.Tensor, target: int, **kwargs: Any) -> Dict:
         num_pixels = torch.numel(smap)
         if self.perturb_step_size >= num_pixels:
             raise ValueError(
-                f"""perturb_step_size should be less than the number of elements in smap,
-                but got {self.perturb_step_size}."""
+                "perturb_step_size should be less than the number of elements in smap, "
+                f"but got {self.perturb_step_size}."
             )
 
         if img.dim() != 4 or img.size()[0] != 1:
             raise ValueError(
-                f"""img should be a 4-D tensor with the size of the first dimension being 1,
-                             but got shape: {img.size()}."""
+                "img should be a 4-D tensor with the size of the first dimension being 1, "
+                f"but got shape: {img.size()}."
             )
 
         _, inds = torch.topk(smap.flatten(), num_pixels)

@@ -46,7 +46,7 @@ def dummy_img_and_smap():
 def test_init(perturb_step_size, forward_batch_size):
     classifier_cfg = dict(type="custom.TestNet")
     if forward_batch_size == 0 or perturb_step_size == 0:
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="should be greater than zero"):
             ins_del = InsertionDeletion(
                 classifier_cfg, forward_batch_size=forward_batch_size, perturb_step_size=perturb_step_size
             )
