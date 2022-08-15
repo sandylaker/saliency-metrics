@@ -5,9 +5,9 @@ import torch
 from scipy.integrate import trapezoid
 from torchvision.transforms import GaussianBlur
 
-from saliency_metrics.metrics.build_metric import METRICS, ReInferenceMetric
 from saliency_metrics.models.build_classifier import build_classifier
 from saliency_metrics.models.model_utils import freeze_module
+from ..build_metric import METRICS, ReInferenceMetric
 from .insertion_deletion_perturbation import ProgressivePerturbation
 from .insertion_deletion_result import InsertionDeletionResult
 
