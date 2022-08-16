@@ -1,21 +1,28 @@
-from typing import Dict
+from typing import Dict, Union
 
 import numpy as np
 import torch
 from sensn_perturbation import SensitivityNPerturbation
-from sensn_results import SensitivityNResult
+from sensn_result import SensitivityNResult
 
 from saliency_metrics.metrics.build_metric import ReInferenceMetric
 from saliency_metrics.metrics.serializable_result import SerializableResult
-from saliency_metrics.models import freeze_module
-from saliency_metrics.models.build_classifier import build_classifier
+from saliency_metrics.models import build_classifier
+from saliency_metrics.models.model_utils import freeze_module
 
 
 class SensitivityN(ReInferenceMetric):
     def __init__(
-        self, classifier_cfg: Dict, log_n_max: int, log_n_ticks: float, summarized: bool = True, num_masks: int = 100
+        self,
+        classifier_cfg: Dict,
+        log_n_max: int,
+        log_n_ticks: float,
+        summarized: bool = True,
+        num_masks: int = 100,
+        device: Union[str, torch.device] = "cuda:0",
     ) -> None:
-        self.classifier = build_classifier(classifier_cfg)
+        self.device = device
+        self.classifier = build_classifier(classifier_cfg).to(self.device)
         # freeze the model and turn eval mode on
         freeze_module(self.classifier)
 
@@ -43,20 +50,11 @@ class SensitivityN(ReInferenceMetric):
     def evaluate(self, img: torch.Tensor, smap: torch.Tensor, target: int) -> Dict:
         batched_sample, sum_attributions = self._perturbation.perturb(img, smap)
 
-        score_diffs = []
-        out = []
         with torch.no_grad():
-            for batch in batched_sample:
-                scores = torch.softmax(self.classifier(batch.unsqueeze(0)), -1)[:, target]
-                out.append(scores.item())
-
-        for i, _ in enumerate(out[0:-1]):
-            score_diffs.append((out[:-1][i] - out[-1:][0]))
-
+            scores = torch.softmax(self.classifier(batched_sample), -1)[:, target]
+        score_diffs = scores[:-1] - scores[-1]
         corrcoef = np.corrcoef(sum_attributions, score_diffs)[1, 0]
-
         single_result = {"n": self._n_list[self._current_n_ind], "correlation": corrcoef}
-
         return single_result
 
     def update(self, single_result: Dict) -> None:
