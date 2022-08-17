@@ -14,9 +14,13 @@ class SensitivityNPerturbation:
     def _generate_random_masks(
         self, spatial_size: Tuple[int, int], device: Optional[Union[str, torch.device]] = None
     ) -> List[torch.Tensor]:
-        """generate masking Tensor with.
+        """generate ``num_masks`` many random mask tensors with ``n`` masks.
 
-        return masks
+        Args:
+            spatial_size: Spatial size of masking tensor
+            device: device on which the torch.Tensor will be allocated
+
+        return masking tensor
         """
         masks: List[torch.Tensor] = []
         h, w = spatial_size
@@ -30,6 +34,18 @@ class SensitivityNPerturbation:
         return masks
 
     def perturb(self, img: torch.Tensor, smap: torch.Tensor) -> Tuple[torch.Tensor, np.ndarray]:
+        """Perturbation of image with masking tensor.
+
+        Args:
+            img: torch.Tensor representing the image to be perturbated
+            smap: torch.Tensor representing the saliency map
+
+        Returns:
+            batched sample: torch.Tensor with shape(num_masks + 1, num_channels, height, width),
+            where the last sample it the unperturbed image.
+            sum_attributions: np.ndarray with shape (num_masks).
+            Each element representing the sum of attributions of each random masked saliency map.
+        """
         batched_sample: List[torch.Tensor] = []
         sum_attributions: List[torch.Tensor] = []
 

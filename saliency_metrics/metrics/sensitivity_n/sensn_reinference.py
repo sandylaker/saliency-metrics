@@ -2,13 +2,12 @@ from typing import Dict, Union
 
 import numpy as np
 import torch
-from sensn_perturbation import SensitivityNPerturbation
-from sensn_result import SensitivityNResult
 
-from saliency_metrics.metrics.build_metric import ReInferenceMetric
-from saliency_metrics.metrics.serializable_result import SerializableResult
-from saliency_metrics.models import build_classifier
-from saliency_metrics.models.model_utils import freeze_module
+from saliency_metrics.models import build_classifier, freeze_module
+from ..build_metric import ReInferenceMetric
+from ..serializable_result import SerializableResult
+from .sensn_perturbation import SensitivityNPerturbation
+from .sensn_result import SensitivityNResult
 
 
 class SensitivityN(ReInferenceMetric):
