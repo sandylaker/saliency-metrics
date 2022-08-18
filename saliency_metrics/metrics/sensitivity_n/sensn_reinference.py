@@ -46,7 +46,7 @@ class SensitivityN(ReInferenceMetric):
         self._current_n_ind += 1
         self._perturbation = SensitivityNPerturbation(self._n_list[self._current_n_ind], self._num_masks)
 
-    def evaluate(self, img: torch.Tensor, smap: torch.Tensor, target: int) -> Dict:
+    def evaluate(self, img: torch.Tensor, smap: torch.Tensor, target: int, **kwargs) -> Dict:
         batched_sample, sum_attributions = self._perturbation.perturb(img, smap)
 
         with torch.no_grad():

@@ -32,7 +32,7 @@ class SensitivityNResult(SerializableResult):
 
     def __init__(self, summarized: bool = True) -> None:
         self.summarized = summarized
-        self._corr_dict = defaultdict(list)
+        self._corr_dict: defaultdict[str, List[str]] = defaultdict(list)
 
     def dump(self, file_path: str) -> None:
         """
@@ -47,13 +47,13 @@ class SensitivityNResult(SerializableResult):
         result: List[Dict] = [{"n": n, "correlation": v} for n, v in self._corr_dict.items()]
 
         if self.summarized:
-            summarized_result = []
-            for result in result:
+            summarized_result: List[Dict] = []
+            for res in result:
                 summarized_result.append(
                     {
-                        "n": result["n"],
-                        "mean_correlation": np.mean(result["correlation"]),
-                        "std_correlation": np.std(result["correlation"]),
+                        "n": res["n"],
+                        "mean_correlation": np.mean(res["correlation"]),
+                        "std_correlation": np.std(res["correlation"]),
                     }
                 )
 
