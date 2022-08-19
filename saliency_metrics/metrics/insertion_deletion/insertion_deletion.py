@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 
 import numpy as np
 import torch
@@ -20,22 +20,26 @@ class InsertionDeletion(ReInferenceMetric):
         perturb_step_size: int = 10,
         sigma: float = 5.0,
         summarized: bool = False,
+        device: Union[str, torch.device] = "cpu",
     ) -> None:
 
         self._result = InsertionDeletionResult(summarized)
 
         self.classifier = build_classifier(classifier_cfg)
         freeze_module(self.classifier, eval_mode=True)
+        self.device = device
+        self.classifier.to(self.device)
+
         self.gaussian_blur = GaussianBlur(int(2 * sigma - 1), sigma)
+        if forward_batch_size <= 0:
+            raise ValueError("forwarded_batch_size should be greater than zero, " f"but got {forward_batch_size}.")
         self.forward_batch_size = forward_batch_size
-        if self.forward_batch_size <= 0:
-            raise ValueError("forwarded_batch_size should be greater than zero, " f"but got {self.forward_batch_size}.")
-        self.perturb_step_size = perturb_step_size
-        if self.perturb_step_size <= 0:
+        if perturb_step_size <= 0:
             raise ValueError(
                 "perturb_step_size should be greater than zero and"
-                f"less than the number of elements in smap, but got {self.perturb_step_size}."
+                f"less than the number of elements in smap, but got {perturb_step_size}."
             )
+        self.perturb_step_size = perturb_step_size
 
     def evaluate(self, img: torch.Tensor, smap: torch.Tensor, target: int, **kwargs: Any) -> Dict:
         num_pixels = torch.numel(smap)
@@ -92,7 +96,6 @@ class InsertionDeletion(ReInferenceMetric):
     def update(self, single_result: Dict) -> None:
         self._result.add_single_result(single_result)
 
-    @property
     def get_result(self) -> InsertionDeletionResult:
         return self._result
 
