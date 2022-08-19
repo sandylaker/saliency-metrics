@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 import torch
 import torch.nn as nn
+from torchvision.transforms import GaussianBlur
 
 from saliency_metrics.metrics.insertion_deletion.insertion_deletion import InsertionDeletion
 from saliency_metrics.models import CUSTOM_CLASSIFIERS
@@ -56,6 +57,10 @@ def test_init(perturb_step_size, forward_batch_size):
         )
         assert ins_del.forward_batch_size == forward_batch_size
         assert ins_del.perturb_step_size == perturb_step_size
+        assert isinstance(ins_del.gaussian_blur, GaussianBlur)
+        assert not ins_del.classifier.training
+        for p in ins_del.classifier.parameters():
+            assert not p.requires_grad
 
 
 @pytest.mark.parametrize("perturb_step_size", [250, 1025])
@@ -102,7 +107,7 @@ def test_evaluate(dummy_img_and_smap, perturb_step_size, img_dimensions):
             assert len(single_result["ins_scores"]) == len(expected_result["ins_scores"])
             assert single_result["img_path"] == expected_result["img_path"]
             ins_del.update(single_result)
-            test_result = ins_del.get_result
+            test_result = ins_del.get_result()
             assert test_result.results[0]["ins_auc"] == pytest.approx(expected_result["ins_auc"], 1e-4)
             assert test_result.results[0]["del_auc"] == pytest.approx(expected_result["del_auc"], 1e-4)
             assert len(test_result.results[0]["del_scores"]) == len(expected_result["del_scores"])
