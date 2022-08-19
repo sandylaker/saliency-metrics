@@ -12,7 +12,7 @@ def dummy_img_and_smap():
     # three-channel image
     img = torch.arange(1, 28, dtype=torch.float32).reshape(1, 3, 3, 3)
     # saliency map
-    smap = torch.arange(1, 10, dtype=torch.float32).reshape(3, 3)
+    smap = torch.arange(1, 10, dtype=torch.uint8).reshape(3, 3)
     yield img, smap
 
 
@@ -41,7 +41,7 @@ def test_perturb(dummy_img_and_smap, forward_batch_size, perturb_step_size):
     row_inds, col_inds = (torch.tensor(x) for x in np.unravel_index(inds.numpy(), smap.size()))
     replace_tensor = torch.zeros_like(img)
     id_ptb = ProgressivePerturbation(img, replace_tensor, (row_inds, col_inds))
-    output_batches: List[torch.tensor] = []
+    output_batches: List[torch.Tensor] = []
     for batch in id_ptb.perturb(forward_batch_size=forward_batch_size, perturb_step_size=perturb_step_size):
         output_batches.append(batch)
     if perturb_step_size == 9:
