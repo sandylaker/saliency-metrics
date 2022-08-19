@@ -30,13 +30,13 @@ def test_result_and_dump(summarized, tmp_path):
     id_result.dump(file_path)
     result = mmcv.load(file_path)
     if summarized:
-        expected_output = {
+        exp_summarized_result = {
             "mean_ins_auc": np.mean([0.3, 0.4]),
             "std_ins_auc": np.std([0.3, 0.4]),
             "mean_del_auc": np.mean([0.1, 0.2]),
             "std_del_auc": np.std([0.1, 0.2]),
             "num_samples": 2,
         }
-        assert result == expected_output
+        assert result == exp_summarized_result
     else:
         assert result == trial
