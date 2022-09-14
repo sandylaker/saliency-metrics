@@ -1,6 +1,7 @@
 from .attribution_method import AttributionMethod, CaptumGradCAM
 from .build_metric import METRICS, ReInferenceMetric, ReTrainingMetric, build_metric
 from .roar import ROAR, RoarPerturbation, RoarResult, roar_single_trial
+from .sanity_check import SanityCheck, SanityCheckResult
 from .serializable_result import SerializableResult
 
 __all__ = [
@@ -15,4 +16,6 @@ __all__ = [
     "SerializableResult",
     "build_metric",
     "roar_single_trial",
+    "SanityCheck",
+    "SanityCheckResult",
 ]
