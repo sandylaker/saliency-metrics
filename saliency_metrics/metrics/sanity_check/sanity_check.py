@@ -34,12 +34,11 @@ class SanityCheck(ReInferenceMetric):
                 consecutive_perturb_layers.append(j)
             ssim_float = self._sanity_check_single(smap, target, consecutive_perturb_layers)
             ssim_list.append(ssim_float)
-            print("State_Dict of layer1.1.conv1.weight: ", self.sd["layer1.1.conv1.weight"])
         return dict(ssim=ssim_list)
 
     def _sanity_check_single(self, smap: np.ndarray, target: int, consecutive_perturb_layers: List[str]) -> float:
         self._perturb_classifier(self.model, consecutive_perturb_layers)
-        smap1 = np.random.randint(0, 255, (10, 10), dtype=np.uint8)  # SMAP and SSIM
+        smap1 = np.random.randint(0, 255, (10, 10), dtype=np.uint8)  # Custom SMAP and SSIM
         return structural_similarity(smap1, smap, data_range=255)
 
     def _perturb_classifier(self, model: torch.nn.Module, layers: List[str]) -> None:
