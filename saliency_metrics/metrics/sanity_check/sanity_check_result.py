@@ -1,5 +1,5 @@
 import os.path as osp
-from typing import List
+from typing import Dict, List
 
 import mmcv
 import numpy as np
@@ -8,15 +8,14 @@ from saliency_metrics.metrics.serializable_result import SerializableResult
 
 
 class SanityCheckResult(SerializableResult):
-    def __init__(self, summarized=True):
+    def __init__(self, summarized=True) -> None:
         self.summarized = summarized
         self.results: List = []
 
-    def add_single_result(self, single_result):
+    def add_single_result(self, single_result: Dict) -> None:
         self.results.append(single_result)
-        print("Appended: ", self.results)
 
-    def dump(self, file_path):
+    def dump(self, file_path: str) -> None:
         if self.summarized:
             ssim_list: List = []
             for result in self.results:
@@ -27,7 +26,6 @@ class SanityCheckResult(SerializableResult):
                 "std_ssim": np.std(ssim_array, axis=0),
                 "num_samples": len(ssim_list),
             }
-            print(summarized_result)
             mmcv.mkdir_or_exist(osp.dirname(file_path))
             mmcv.dump(summarized_result, file_path)
         else:
